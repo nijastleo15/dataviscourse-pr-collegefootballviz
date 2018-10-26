@@ -1,3 +1,7 @@
+/**
+ * TODO: Change code to work on college football data
+ */
+
 loadData().then(data => {
 
     // no country selected by default
