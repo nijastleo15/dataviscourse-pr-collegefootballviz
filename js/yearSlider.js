@@ -37,7 +37,6 @@ class YearSlider
                 d3.csv("data/Coordinates.csv").then(coordinates => {
                     let map = new Map(school_data, coordinates, this.value);
                     map.updateMap();
-                    console.log(document.body.scrollHeight);
                 })
             });
             //let xValue = d3.select('#dropdown_x').select('select').node().value;
