@@ -1,169 +1,172 @@
-/**
- * TODO: Change code to work on college football data. Include tooltip.
- */
-
-/**
- * Data structure for the data associated with an individual country.
- * the CountryData class will be used to keep the data for drawing your map.
- * You will use the region to assign a class to color the map!
- */
-class CountryData {
-    /**
-     *
-     * @param type refers to the geoJSON type- countries are considered features
-     * @param properties contains the value mappings for the data
-     * @param geometry contains array of coordinates to draw the country paths
-     * @param region the country region
-     */
-    constructor(type, id, properties, geometry, region) {
-
-        this.type = type;
-        this.id = id;
-        this.properties = properties;
-        this.geometry = geometry;
-        this.region = region;
-    }
-}
-
 /** Class representing the map view. */
-class Map {
-
+class Map
+{
     /**
      * Creates a Map Object
-     *
-     * @param data the full dataset
-     * @param updateCountry a callback function used to notify other parts of the program when the selected
-     * country was updated (clicked)
      */
-    constructor(data, updateCountry) {
-        // ******* TODO: PART I *******
-        this.projection = d3.geoWinkel3().scale(140).translate([365, 225]);
-        this.nameArray = data.population.map(d => d.geo.toUpperCase());
-        this.populationData = data.population;
-        this.updateCountry = updateCountry;
+    constructor(school_data, latlongs, activeYear)
+    {
+        this.activeYear = activeYear;
+        
+        this.projection = d3.geoAlbersUsa().scale([1270]).translate([480, 300]);
+
+        let schools = school_data.filter(d => d.Year == this.activeYear);
+
+        //Filters this by schools participating during active year
+        let coordinates = schools.map(d => {
+            let coords = latlongs.filter((val) => d.School === val.School);
+            return coords;
+        });
+
+        this.data = schools;
+        for (let i = 0; i < this.data.length; i++)
+        {
+            this.data[i].Lat = coordinates[i][0].Lat;
+            this.data[i].Long = coordinates[i][0].Long;
+        }
+
+        // Initialize tooltip
+        this.tip = d3.tip().attr('class', 'd3-tip')
+        .direction('se')
+        .offset(function() {
+            return [0,0];
+        })
     }
 
     /**
-     * Renders the map
+     * Renders the map, only called once on load
      * @param world the json data with the shape of all countries and a string for the activeYear
      */
-    drawMap(world) {
-        //note that projection is global!
+    drawMap(theMap)
+    {
+        let geojson = topojson.feature(theMap, theMap.objects.states);
 
-        // ******* TODO: PART I *******
+        //let path = d3.geoPath().projection(this.projection);
+        let path = d3.geoPath();
 
-        // Draw the background (country outlines; hint: use #map-chart)
-        // Make sure to add a graticule (gridlines) and an outline to the map
+        let map = d3.select("#map-chart").append("svg");
 
-        // Hint: assign an id to each country path to make it easier to select afterwards
-        // we suggest you use the variable in the data element's id field to set the id
+        map.append("g")
+           .classed("states", true)
+           .selectAll('path')
+           .data(geojson.features)
+           .enter().append('path')
+           .attr('d', path);
+        
+        d3.select(".states").append("path")
+           .classed("state-borders", true)
+           .attr("d", path(topojson.mesh(theMap, theMap.objects.states, function(a,b) {
+               return a !== b;})));
+        // outer border?
 
-        // Make sure and give your paths the appropriate class (see the .css selectors at
-        // the top of the provided html file)
-
-        // You need to match the country with the region. This can be done using .map()
-        // We have provided a class structure for the data called CountryData that you should assign the paramters to in your mapping
-
-        // ++++++++ BEGIN CUT +++++++++++
-        let that = this;
-        d3.select('#country-detail').style('opacity', 0);
-        let geojson = topojson.feature(world, world.objects.countries);
-
-        let countryData = geojson.features.map(d => {
-            let index = this.nameArray.indexOf(d.id);
-            let regiondata = index > -1 ? this.populationData[index].region : 'none';
-            return new CountryData(d.type, d.id, d.properties, d.geometry, regiondata);
-        });
-
-        let path = d3.geoPath()
-            .projection(this.projection);
-
-        let map = d3.select('#map-chart').append('svg');
-
-        map.append("defs").append("path")
-            .datum({ 'type': "Sphere" })
-            .attr("id", "sphere")
-            .attr("d", path);
-
-        map.append("use")
-            .attr("class", "stroke")
-            .attr("xlink:href", "#sphere");
-
-        map.append("use")
-            .attr("class", "fill")
-            .attr("xlink:href", "#sphere");
-
-        let countries = map.selectAll('path')
-            .data(countryData)
-            .enter().append('path')
-            .attr('d', path)
-            .attr('id', (d) => d.id)
-            .attr('class', (d) => d.region)
-            .classed('countries', true);
-
-
-        countries.on('click', function(d) {
-            event.stopPropagation();
-            let countryID = { id: d.id, region: d.region };
-            that.clearHighlight();
-            that.updateCountry(countryID);
-        });
-
-        // Add graticule to the map
-        let graticule = d3.geoGraticule();
-
-        let grat = map
-            .append('path')
-            .datum(graticule)
-            .classed('graticule', true)
-            .attr('d', path)
-            .attr('fill', 'none');
-
-        map.insert("path", ".graticule")
-            // map.insert("path", '.test')
-            .datum(topojson.mesh(world, world.objects.countries, (a, b) => a !== b))
-            .attr("class", "boundary")
-            .attr("d", path);
-
-        // ++++++++ END CUT +++++++++++
+        map.append("g").classed("cities", true);
     }
 
     /**
-     * Highlights the selected conutry and region on mouse click
-     * @param activeCountry the country ID of the country to be rendered as selected/highlighted
+     * Renders the HTML content for tool tip.
+     * @param tooltip_data information that needs to be populated in the tool tip
+     * @return text HTML content for tool tip
      */
-    updateHighlightClick(activeCountry) {
-        // ******* TODO: PART 3*******
-        // Assign selected class to the target country and corresponding region
-        // Hint: If you followed our suggestion of using classes to style
-        // the colors and markers for countries/regions, you can use
-        // d3 selection and .classed to set these classes on here.
-        //
-        // ++++++++ BEGIN CUT +++++++++++
-        this.clearHighlight();
-        //highlight map
-        let countries = d3.select('#map-chart').selectAll('.countries');
-        let regions = countries.filter(c => c.region === activeCountry.region).classed('selected-region', true);
-        let mapTarget = countries.filter(c => c.id === activeCountry.id).classed('selected-country', true);
-        // ++++++++ END CUT +++++++++++
+    tooltip_render(tooltip_data)
+    {
+        // SchoolName (W-L)
+        let text = "<h3>" + tooltip_data.School + "   (" + tooltip_data.W + "-" + tooltip_data.L + ")</h3>";
+
+        text += "<h3>" + this.activeYear + "</h3>";
+        
+        // Start unordered list
+        text += "<ul>"
+
+        // Conference:
+        let conf = "";
+        if (tooltip_data.Conf == "MW") conf = "Mountain West";
+        else if (tooltip_data.Conf == "C-USA") conf = "Conference USA";
+        else conf = tooltip_data.Conf;
+        text += "<li> Conference: " + conf + "</li>";
+
+        // Public or private
+        text += "<li>" + tooltip_data.PubPriv + " university </li>";
+
+        // # of undergrads
+        let ug = "";
+        if (tooltip_data.UG == -1) ug = "Unknown number of";
+        else ug = tooltip_data.UG;
+        text += "<li>" + ug + " undergraduates </li>";
+
+        // Revenue
+        let rev = "";
+        if (tooltip_data.Revenue == -1) rev = "Unknown";
+        else rev = "$" + tooltip_data.Revenue;
+        text += "<li> Revenue: " + rev + "</li>";
+
+        // Expenses
+        let exp = "";
+        if (tooltip_data.Expenses == -1) exp = "Unknown";
+        else exp = "$" + tooltip_data.Expenses;
+        text += "<li> Expenses: " + exp + "</li>";
+
+        // Head coach salary
+        let coach_salary = "";
+        if (tooltip_data.Coach == -1) coach_salary = "Unknown";
+        else coach_salary = "$" + tooltip_data.Coach;
+        text += "<li> Head coach salary: " + coach_salary + "</li>";
+
+        // Infractions
+        text += "<li> Infractions: " + tooltip_data.Infractions + "</li>";
+
+        // End unordered list
+        text += "</ul>"
+
+        return text;
     }
 
-    /**
-     * Clears all highlights
-     */
-    clearHighlight() {
-        // ******* TODO: PART 3*******
-        // Clear the map of any colors/markers; You can do this with inline styling or by
-        // defining a class style in styles.css
+    /*
+    * Updates the circles on the map representing the schools when the year changes.
+    */
+    updateMap()
+    {
+        let map = d3.select("#map-chart").select("svg");
+        
+        d3.selectAll(".d3-tip").remove();
+        
+        this.tip.html((d) => {
+            let tooltip_data = {
+                "School": d.School,
+                "W": d.Wins,
+                "L": d.Losses,
+                "Conf": d.Conference,
+                "PubPriv": d.Public_Private,
+                "UG": d.Undergrads,
+                "Revenue": d.Revenues,
+                "Expenses": d.Expenses,
+                "Coach": d.Coach_Salary,
+                "Infractions": d.Infractions
+            };
+            return this.tooltip_render(tooltip_data);});
+        
+        map.call(this.tip);
+        
+        let cities = d3.select(".cities");
+        cities.selectAll("circle").remove();
 
-        // Hint: If you followed our suggestion of using classes to style
-        // the colors and markers for hosts/teams/winners, you can use
-        // d3 selection and .classed to set these classes off here.
-
-        // ++++++++ BEGIN CUT +++++++++++
-        d3.select('#map-chart').selectAll('.selected-country').classed('selected-country', false);
-        d3.select('#map-chart').selectAll('.selected-region').classed('selected-region', false);
-        d3.select('#map-chart').selectAll('.hidden').classed('hidden', false);
-        // ++++++++ END CUT +++++++++++
+        for (let i = 0; i < this.data.length; i++)
+        {
+            this.data[i].Proj_Long = this.projection([this.data[i].Long, this.data[i].Lat])[0];
+            this.data[i].Proj_Lat = this.projection([this.data[i].Long, this.data[i].Lat])[1];
+        }
+        
+        cities.selectAll("circle")
+              .data(this.data)
+              .enter().append("circle")
+              .attr("cx", (d) => d.Proj_Long)
+              .attr("cy", (d) => d.Proj_Lat)
+              .attr("r", 5)
+              .attr("class", (d) => d.School)
+              .style("fill", "red")
+              .style("opacity", 0.6)
+              .on("mouseover", this.tip.show)
+              .on("mouseout", this.tip.hide);
+              //TODO:
+              //.on("click", ...)
     }
 }
