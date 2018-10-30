@@ -3,9 +3,9 @@
  */
 
 /** Data structure for the data associated with an individual country. */
-class PlotData {
+class PlotData
+{
     /**
-     *
      * @param country country name from the x data object
      * @param xVal value from the data object chosen for x at the active year
      * @param yVal value from the data object chosen for y at the active year

@@ -8,8 +8,6 @@ class YearSlider
 
     drawYearBar()
     {
-        //let that = this;
-
         let yearScale = d3.scaleLinear().domain([2003, 2016]).range([40, 500]);
 
         let yearSlider = d3.select('#year-slider')
@@ -37,13 +35,11 @@ class YearSlider
                 d3.csv("data/Coordinates.csv").then(coordinates => {
                     let map = new Map(school_data, coordinates, this.value);
                     map.updateMap();
+                    //let scatter = new ScatterPlot();
+                    //scatter.updateScatter(); etc.
+
                 })
             });
-            //let xValue = d3.select('#dropdown_x').select('select').node().value;
-            //let yValue = d3.select('#dropdown_y').select('select').node().value;
-            //let cValue = d3.select('#dropdown_c').select('select').node().value;
-            //that.updatePlot(String(this.value), xValue, yValue, cValue);
-            //that.updateYear(String(this.value));
         }); 
     }
 }

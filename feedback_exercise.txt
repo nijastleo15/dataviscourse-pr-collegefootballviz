@@ -1,0 +1,35 @@
+Peer Feedback - CS 6630 Visualization for Data Science
+10/30/2018
+
+* Names in group that gave us feedback:
+- Haihan Lin
+- Xuan Huang
+
+
+* Their feedback:
+
+They thought it was a solid plan!
+
+They suggested comparing two/mulitple selected schools on the profile
+table and line chart. This could be done by showing the differences
+between revenues/expenses/etc. between the two schools on the profile 
+table. Multiple schools could be superimposed on the same line graph.
+
+We could also color code map circles by conference, or highlight them
+in some way. For example, if "Big Ten" was selected for a conference,
+those circles could get darker/bigger while the other circles got
+lighter/smaller.
+
+In addition to categorical variables like conference, we could also color
+code schools by quantitative variables such as revenue. We could create a
+color scale that shows schools with higher revenue as darker, for example.
+These colors could be shown on the map, the scatter plot, or both.
+
+
+* What we will do based on their feedback:
+
+    Their suggestions touched on a lot of the optional features that we
+had in mind. Our focus will be implementing our must-haves, then adding
+to them using our original ideas for optional features as well as the
+suggestions from the other group. Haihan and Xuan definitely gave us some
+good ideas on ways to "spice up" the look of our visualization.

@@ -1,4 +1,6 @@
 /** Class representing the map view. */
+// TODO: Add dropdowns
+
 class Map
 {
     /**
@@ -24,6 +26,8 @@ class Map
             this.data[i].Lat = coordinates[i][0].Lat;
             this.data[i].Long = coordinates[i][0].Long;
         }
+
+        //console.log(this.data);
 
         // Initialize tooltip
         this.tip = d3.tip().attr('class', 'd3-tip')
