@@ -2,18 +2,62 @@
 
 let mapChart = null;
 let yearSlider = null;
-//let scatterPlot = null;
+// let scatterPlot = null;
 //let profileTable = null;
 //let lineChart = null;
 let defaultYear = 2012;
 
+//
+let that = this;
+let gapPlot = null;
+
+//Unsure if needed.
+function updateYear(year) {
+    // ++++++++ BEGIN CUT +++++++++++
+    that.activeYear = year;
+    if (that.activeCountry !== null) {
+        gapPlot.updateHighlightClick(that.activeCountry);
+        infoBox.updateTextDescription(that.activeCountry, that.activeYear);
+    }
+    // ++++++++ END CUT +++++++++++
+}
+// ******* TODO: PART 3 *******
+/**
+ * Calls the functions of the views that need to react to a newly selected/highlighted country
+ *
+ * @param countryID the ID object for the newly selected country
+ */
+function updateCountry(countryID) {
+
+    that.activeCountry = countryID;
+    // ++++++++ BEGIN CUT +++++++++++
+    if (countryID === null) {
+        gapPlot.clearHighlight();
+        worldMap.clearHighlight();
+        infoBox.clearHighlight();
+        that.activeCountry = null;
+    } else {
+        that.activeCountry = countryID;
+        gapPlot.updateHighlightClick(countryID);
+        worldMap.updateHighlightClick(countryID);
+        infoBox.updateTextDescription(countryID, that.activeYear);
+    }
+    // ++++++++ END CUT +++++++++++
+}
+
+//
 d3.csv("data/Project_Data.csv").then(school_data => {
     d3.csv("data/Coordinates.csv").then(coordinates => {
         mapChart = new Map(school_data, coordinates, defaultYear);
-        yearSlider = new YearSlider(defaultYear);
-        //scatterPlot = new scatterPlot(school_data);
+        // yearSlider = new YearSlider(defaultYear);
+        // scatterPlot = new scatterPlot(school_data);
         //profileTable = new ProfileTable(school_data);
         //lineChart = new LineChart(school_data);
+
+        gapPlot = new GapPlot(school_data, updateCountry, updateYear, defaultYear);
+        gapPlot.updatePlot(2012, 'Revenues', 'Undergrads', 'Wins');
+        yearSlider = new YearSlider(defaultYear, mapChart, gapPlot);
+
     })
 });
 
