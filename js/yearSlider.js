@@ -35,6 +35,7 @@ class YearSlider
                 d3.csv("data/Coordinates.csv").then(coordinates => {
                     let map = new Map(school_data, coordinates, this.value);
                     map.updateMap();
+                    map.drawDropdown();
                     //let scatter = new ScatterPlot();
                     //scatter.updateScatter(); etc.
 
