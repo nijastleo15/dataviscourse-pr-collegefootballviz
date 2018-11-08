@@ -146,8 +146,6 @@ class GapPlot {
             .append('svg')
             .append('g')
             .attr('transform', 'translate(10, 0)');
-
-
     }
 
     /**
@@ -432,7 +430,7 @@ class GapPlot {
         // }
 
         /* CIRCLE DROPDOWN */
-        let dropC = dropDownWrapper.select('#dropdown_c').select('.dropdown-content').select('select');
+        let dropC = dropDownWrapper.select('#dropdown_c').select('.dropdown-content').select('select'); //.select('select')??
 
         let optionsC = dropC.selectAll('option')
             .data(dropData);
