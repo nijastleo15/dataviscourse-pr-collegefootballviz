@@ -1,8 +1,4 @@
-/**
- * TODO: Change code to work on college football data. Include dropdown menus for variables.
- */
-
-/** Data structure for the data associated with an individual country. */
+/** Data structure for the data associated with an individual school. */
 class PlotData
 {
     /**
@@ -25,9 +21,8 @@ class PlotData
 
 /** Class representing the scatter plot view. */
 class GapPlot {
-
     /**
-     * Creates an new GapPlot Object
+     * Creates a new GapPlot Object
      * @param updateCountry a callback function used to notify other parts of the program when the selected
      * country was updated (clicked)
      * @param updateYear a callback function used to notify other parts of the program when a year was updated
@@ -56,15 +51,15 @@ class GapPlot {
 
         // ++++++++ END CUT +++++++++++
 
-        //
-        console.log(this.activeYear);
-        console.log(this.data);
+        // //
+        // console.log(this.activeYear);
+        // console.log(this.data);
         let stuff = this.data.filter(d => {
           // console.log(d.Year);
           // console.log(this.activeYear);
           return +d.Year === this.activeYear
         });
-        console.log('stuff', stuff);
+        // console.log('stuff', stuff);
 
 
     }
@@ -72,9 +67,7 @@ class GapPlot {
     /**
      * Sets up the plot, axes, and slider,
      */
-
     drawPlot() {
-
       //Create svg groups etc
         d3.select('#scatter-plot')
             .append('div').attr('id', 'chart-view');
@@ -164,21 +157,6 @@ class GapPlot {
         /*
         You will be updating the scatterplot from the data. hint: use the #chart-view div
 
-        *** Structuring your PlotData objects ***
-        You need to start by mapping the data specified by the parameters to the PlotData Object
-        Your PlotData object is specified at the top of the file
-        You will need get the data specified by the x, y and circle size parameters from the data passed
-        to the GapPlot constructor
-
-        *** Setting the scales for your x, y, and circle data ***
-        For x and y data, you should get the overall max of the whole data set for that data category,
-        not just for the activeYear.
-
-        ***draw circles***
-        draw the circles with a scaled area from the circle data, with cx from your x data and cy from y data
-        You need to size the circles from your circleSize data, we have provided a function for you to do this
-        called circleSizer. Use this when you assign the 'r' attribute.
-
         ***Tooltip for the bubbles***
         You need to assign a tooltip to appear on mouse-over of a country bubble to show the name of the country.
         We have provided the mouse-over for you, but you have to set it up
@@ -208,31 +186,24 @@ class GapPlot {
         let populationData = this.data.population;
 
         ///////my  code
-        console.log(this.data);
+        // console.log(this.data);
         let stuff2 = this.data.filter(d => {
           return +d.Year == activeYear
         });
-        console.log('update stuff2 for year', activeYear, stuff2);
+        // console.log('update stuff2 for year', activeYear, stuff2);
 
 
         let that = this;
         this.activeYear = activeYear;
 
-        ////    constructor(country, xVal, yVal, id, region, circleSize) {
-
         let plotData2 = stuff2.map(d => {
-          // console.log(d);
-          // console.log('y ind', yIndicator)
-          // console.log(d[yIndicator]);
           let yValue = d[yIndicator];
           let xValue = d[xIndicator];
           let circleSize = d[circleSizeIndicator];
-          // console.log('yval', yValue);
           ////    constructor(country, xVal, yVal, id, region, circleSize) {
           return new PlotData(d.School, xValue, yValue, 7, 8, circleSize);
         });
         plotData2 = plotData2.filter(p => p != null);
-        // console.log('pd2', plotData2);
         ///
 
         let tooltip = d3.select('.tooltip');
@@ -248,44 +219,15 @@ class GapPlot {
         let sizeDataSport = this.data.map(d => {
           return +d[circleSizeIndicator];
         })
-        console.log(xDataSport);
+        // console.log(xDataSport);
 
         let plotData = plotData2;
 
-        /**
-         * Finds the max for the specified data
-         * @param dataOb
-         * @returns {*|number}
-         */
-        function findMax(dataOb) {
-            let totalMax = d3.max(dataOb.map(m => {
-                let val = Object.values(m).filter(v => typeof v === 'number');
-                let max = d3.max(val);
-                return max;
-            }));
-            return totalMax;
-        }
-        /**
-         * Finds the min for the specified data
-         * @param dataOb
-         * @returns {number | *}
-         */
-        function findMin(dataOb) {
-            let totalMin = d3.min(dataOb.map(m => {
-                let val = Object.values(m).filter(v => typeof v === 'number'); //coming back empty
-                let min = d3.min(val);
-                return min;
-            }));
-            return totalMin;
-        }
-
-        //Find the max for the X and Y data
-
+        //////Find the max for the X and Y data
         // console.log('xds', xDataSport);
         // console.log('yds', yDataSport);
         let maxX = d3.max(xDataSport);
         let maxY = d3.max(yDataSport);
-
 
         // console.log('maxX: ', maxX, ' // maxY: ', maxY);
         //Find the min and max size for the circle data
@@ -319,7 +261,7 @@ class GapPlot {
         let yAxis = d3.select('.y-axis')
             .call(d3.axisLeft(yScale));
 
-        //Add the countries as circles
+        //Add the schools as circles
         let circles = group.selectAll('circle').data(plotData);
 
         circles.exit().remove();
@@ -329,6 +271,7 @@ class GapPlot {
 
         circles = circleEnter.merge(circles);
 
+        //Should be updated for something
         //Add the country region as class to color
         circles.attr("class", (d) => d.region)
             .classed('bubble', true);
@@ -519,8 +462,6 @@ class GapPlot {
      * @param max maximum value for the sizeData
      */
     drawLegend(min, max) {
-        // ******* TODO: PART 2*******
-        //This has been done for you but you need to call it in updatePlot()!
         //Draws the circle legend to show size based on health data
         let scale = d3.scaleSqrt().range([3, 20]).domain([min, max]);
 
