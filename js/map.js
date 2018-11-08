@@ -196,9 +196,12 @@ class Map {
                 "MAC", "MW", "Pac-12", "SEC", "Sun Belt", "WAC"];
         }
 
-        d3.selectAll("select").remove();
+        //d3.selectAll("select").remove(); //Causing an issue w/ the select boxes in plot
+        d3.select('#conferenceDropdown').remove();
 
-        let dropDown = d3.select("#map-dropdown").append("select").attr("name", "conference-list");
+
+        let dropDown = d3.select("#map-dropdown").append("select").attr("name", "conference-list")
+        .attr('id', 'conferenceDropdown'); //added
 
         let options = dropDown.selectAll("option").data(conferences).enter().append("option");
 
