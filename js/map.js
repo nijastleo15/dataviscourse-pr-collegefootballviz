@@ -174,6 +174,7 @@ class Map {
         //TODO:
             .on("click", d=> {
 
+                //create lineChart object
                 let lineChart = new LineChart(d);
                 lineChart.drawLineChart();
 
