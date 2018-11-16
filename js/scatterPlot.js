@@ -2,25 +2,25 @@
 class PlotData
 {
     /**
-     * @param country country name from the x data object
+     * @param school school name
      * @param xVal value from the data object chosen for x at the active year
      * @param yVal value from the data object chosen for y at the active year
-     * @param id country id
-     * @param region country region
+     * @param conference conference
      * @param circleSize value for r from data object chosen for circleSizeIndicator
      */
-    constructor(country, xVal, yVal, id, region, circleSize) {
-        this.country = country;
+    constructor (school, xVal, yVal, conference, circleSize)
+    {
+        this.school = school;
         this.xVal = xVal;
         this.yVal = yVal;
-        this.id = id;
-        this.region = region;
+        this.conference = conference;
         this.circleSize = circleSize;
     }
 }
 
 /** Class representing the scatter plot view. */
-class GapPlot {
+class GapPlot
+{
     /**
      * Creates a new GapPlot Object
      * @param updateCountry a callback function used to notify other parts of the program when the selected
@@ -28,9 +28,8 @@ class GapPlot {
      * @param updateYear a callback function used to notify other parts of the program when a year was updated
      * @param activeYear the year for which the data should be drawn initially
      */
-    constructor(data, updateCountry, updateYear, activeYear) {
-
-        // ******* TODO: PART 2 *******
+    constructor (data, updateCountry, updateYear, activeYear)
+    {
         this.margin = { top: 20, right: 20, bottom: 60, left: 80 };
         this.width = 810 - this.margin.left - this.margin.right;
         this.height = 500 - this.margin.top - this.margin.bottom;
@@ -41,17 +40,12 @@ class GapPlot {
         this.xIndicator = null;
         this.yIndicator = null;
         this.circleSizeIndicator = null;
-        // ++++++++ BEGIN CUT +++++++++++
 
         this.drawPlot();
-        // ++++++++ END CUT +++++++++++
 
         this.updateCountry = updateCountry;
         this.updateYear = updateYear;
 
-        // ++++++++ END CUT +++++++++++
-
-        // //
         // console.log(this.activeYear);
         // console.log(this.data);
         let stuff = this.data.filter(d => {
@@ -60,15 +54,14 @@ class GapPlot {
           return +d.Year === this.activeYear
         });
         // console.log('stuff', stuff);
-
-
     }
 
     /**
-     * Sets up the plot, axes, and slider,
+     * Sets up the plot, axes, and slider.
      */
-    drawPlot() {
-      //Create svg groups etc
+    drawPlot()
+    {
+        //Create svg groups, etc.
         d3.select('#scatter-plot')
             .append('div').attr('id', 'chart-view');
 
@@ -87,7 +80,6 @@ class GapPlot {
 
         let svgGroup = d3.select('#chart-view').select('.plot-svg').append('g').classed('wrapper-group', true);
 
-        // ++++++++ BEGIN CUT +++++++++++
         svgGroup.append('text').classed('activeYear-background', true)
             .attr('transform', 'translate(100, 100)');
 
@@ -101,9 +93,8 @@ class GapPlot {
             .attr("class", "y-axis");
 
         svgGroup.append('text').classed('axis-label-y', true);
-        // ++++++++ END CUT +++++++++++
 
-        /* This is the setup for the dropdown menu- no need to change this */
+        /* This is the setup for the dropdown menu. */
         let dropdownWrap = d3.select('#chart-view').append('div').classed('dropdown-wrapper', true);
 
         let cWrap = dropdownWrap.append('div').classed('dropdown-panel', true);
@@ -142,18 +133,28 @@ class GapPlot {
     }
 
     /**
+     * Helper function added to remove spaces from conference
+     * names when bubbles are being classed.
+     * @param {string} input
+     */
+    removeSpace(input)
+    {
+        let str = input.replace(/\s/g, '');
+        return str;
+    }
+
+    /**
      * Renders the plot for the parameters specified
-     *
      * @param activeYear the year for which to render
      * @param xIndicator identifies the values to use for the x axis
      * @param yIndicator identifies the values to use for the y axis
      * @param circleSizeIndicator identifies the values to use for the circle size
      */
-    updatePlot(activeYear, xIndicator, yIndicator, circleSizeIndicator) {
+    updatePlot(activeYear, xIndicator, yIndicator, circleSizeIndicator)
+    {
         this.xIndicator = xIndicator;
         this.yIndicator = yIndicator;
         this.circleSizeIndicator = circleSizeIndicator;
-        // ******* TODO: PART 2 *******
         /*
         You will be updating the scatterplot from the data. hint: use the #chart-view div
 
@@ -176,48 +177,45 @@ class GapPlot {
          * @param d the data value to encode
          * @returns {number} the radius
          */
-        let circleSizer = function(d) {
+        let circleSizer = function(d)
+        {
             let cScale = d3.scaleSqrt().range([3, 20]).domain([minSize, maxSize]);
             return d.circleSize ? cScale(d.circleSize) : 3;
         };
-        ///////////////////////////////////////////////////////////////////
 
-        // ++++++++ BEGIN CUT +++++++++++
         let populationData = this.data.population;
 
-        ///////my  code
+        /////// my code
         // console.log(this.data);
         let stuff2 = this.data.filter(d => {
           return +d.Year == activeYear
         });
         // console.log('update stuff2 for year', activeYear, stuff2);
 
-
         let that = this;
         this.activeYear = activeYear;
 
         let plotData2 = stuff2.map(d => {
-          let yValue = d[yIndicator];
-          let xValue = d[xIndicator];
-          let circleSize = d[circleSizeIndicator];
-          ////    constructor(country, xVal, yVal, id, region, circleSize) {
-          return new PlotData(d.School, xValue, yValue, 7, 8, circleSize);
+            let yValue = d[yIndicator];
+            let xValue = d[xIndicator];
+            let circleSize = d[circleSizeIndicator];
+            //// constructor(school, xVal, yVal, conference, circleSize) {
+            return new PlotData(d.School, xValue, yValue, d.Conference, circleSize);
         });
         plotData2 = plotData2.filter(p => p != null);
         ///
 
         let tooltip = d3.select('.tooltip');
-        //
 
         //Need max/mins of data
         let yDataSport = this.data.map(d => {
-          return +d[yIndicator];
+            return +d[yIndicator];
         })
         let xDataSport = this.data.map(d => {
-          return +d[xIndicator];
+            return +d[xIndicator];
         })
         let sizeDataSport = this.data.map(d => {
-          return +d[circleSizeIndicator];
+            return +d[circleSizeIndicator];
         })
         // console.log(xDataSport);
 
@@ -271,9 +269,7 @@ class GapPlot {
 
         circles = circleEnter.merge(circles);
 
-        //Should be updated for something
-        //Add the country region as class to color
-        circles.attr("class", (d) => d.region)
+        circles.attr("class", (d) => this.removeSpace(d.conference))
             .classed('bubble', true);
 
         circles.attr("r", (d) => circleSizer(d))
@@ -293,7 +289,6 @@ class GapPlot {
             tooltip.html(that.tooltipRender(d) + "<br/>")
                 .style("left", (d3.event.pageX) + "px")
                 .style("top", (d3.event.pageY - 28) + "px");
-
         });
         //hover function for country selection
         circles.on("mouseout", function(d) {
@@ -316,9 +311,6 @@ class GapPlot {
 
         this.drawLegend(minSize, maxSize);
         this.drawDropDown(xIndicator, yIndicator, circleSizeIndicator);
-
-        // ++++++++ END CUT +++++++++++
-
     }
 
     /**
@@ -327,8 +319,8 @@ class GapPlot {
      * @param yIndicator identifies the values to use for the y axis
      * @param circleSizeIndicator identifies the values to use for the circle size
      */
-    drawDropDown(xIndicator, yIndicator, circleSizeIndicator) {
-
+    drawDropDown(xIndicator, yIndicator, circleSizeIndicator)
+    {
         let that = this;
         let dropDownWrapper = d3.select('.dropdown-wrapper');
         let dropData = [];
@@ -452,16 +444,15 @@ class GapPlot {
             let cValue = dropC.node().value;
             that.updatePlot(that.activeYear, xValue, yValue, cValue);
         });
-
     }
 
     /**
      * Draws the legend for the circle sizes
-     *
      * @param min minimum value for the sizeData
      * @param max maximum value for the sizeData
      */
-    drawLegend(min, max) {
+    drawLegend(min, max)
+    {
         //Draws the circle legend to show size based on health data
         let scale = d3.scaleSqrt().range([3, 20]).domain([min, max]);
 
@@ -493,16 +484,15 @@ class GapPlot {
      * and fades countries on other continents out
      * @param activeCountry
      */
-    updateHighlightClick(activeCountry) {
-        /* ******* TODO: PART 3*******
-        //You need to assign selected class to the target country and corresponding region
+    updateHighlightClick(activeCountry)
+    {
+        // You need to assign selected class to the target country and corresponding region
         // Hint: If you followed our suggestion of using classes to style
         // the colors and markers for countries/regions, you can use
         // d3 selection and .classed to set these classes on here.
         // You will not be calling this directly in the gapPlot class,
         // you will need to call it from the updateHighlight function in script.js
-        */
-        // ++++++++ BEGIN CUT +++++++++++
+        
         this.clearHighlight();
         //highlight bubbles
         let bubbleRegion = d3.select('#scatter-plot').selectAll('.bubble')
@@ -513,29 +503,25 @@ class GapPlot {
             .classed('hidden', true);
         let bubbleCountry = bubbleRegion.filter(b => b.id === activeCountry.id)
             .classed('selected-country', true);
-        // ++++++++ END CUT +++++++++++
     }
 
     /**
      * Clears any highlights
      */
-    clearHighlight() {
-        // ******* TODO: PART 3*******
+    clearHighlight()
+    {
         // Clear the map of any colors/markers; You can do this with inline styling or by
         // defining a class style in styles.css
-
         // Hint: If you followed our suggestion of using classes to style
         // the colors and markers for hosts/teams/winners, you can use
         // d3 selection and .classed to set these classes off here.
 
-        // ++++++++ BEGIN CUT +++++++++++
         d3.select('#chart-view').selectAll('.selected-country')
             .classed('selected-country', false);
         d3.select('#chart-view').selectAll('.selected-region')
             .classed('selected-region', false);
         d3.select('#chart-view').selectAll('.hidden')
             .classed('hidden', false);
-        // ++++++++ END CUT +++++++++++
     }
 
     /**
@@ -543,9 +529,9 @@ class GapPlot {
      * @param data
      * @returns {string}
      */
-    tooltipRender(data) {
-        let text = "<h2>" + data['country'] + "</h2>";
+    tooltipRender(data)
+    {
+        let text = "<h2>" + data['school'] + "</h2>";
         return text;
     }
-
 }

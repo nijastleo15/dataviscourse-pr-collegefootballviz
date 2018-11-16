@@ -1,18 +1,17 @@
 /** Class representing the map view. */
-// TODO: Add dropdowns
 
-class Map {
+class Map
+{
     /**
      * Creates a Map Object
      */
-    constructor(school_data, latlongs, activeYear) {
+    constructor (school_data, latlongs, activeYear)
+    {
         this.activeYear = activeYear;
 
         this.projection = d3.geoAlbersUsa().scale([1270]).translate([480, 300]);
 
         let schools = school_data.filter(d => d.Year == this.activeYear);
-
-
 
         //Filters this by schools participating during active year
         let coordinates = schools.map(d => {
@@ -26,8 +25,6 @@ class Map {
             this.data[i].Long = coordinates[i][0].Long;
         }
 
-
-
         // Initialize tooltip
         this.tip = d3.tip().attr('class', 'd3-tip')
             .direction('se')
@@ -40,7 +37,8 @@ class Map {
      * Renders the map, only called once on load
      * @param world the json data with the shape of all countries and a string for the activeYear
      */
-    drawMap(theMap) {
+    drawMap(theMap)
+    {
         let geojson = topojson.feature(theMap, theMap.objects.states);
 
         //let path = d3.geoPath().projection(this.projection);
@@ -63,7 +61,6 @@ class Map {
         // outer border?
 
         map.append("g").classed("cities", true);
-
     }
 
     /**
@@ -71,7 +68,8 @@ class Map {
      * @param tooltip_data information that needs to be populated in the tool tip
      * @return text HTML content for tool tip
      */
-    tooltip_render(tooltip_data) {
+    tooltip_render(tooltip_data)
+    {
         // SchoolName (W-L)
         let text = "<h3>" + tooltip_data.School + "   (" + tooltip_data.W + "-" + tooltip_data.L + ")</h3>";
 
@@ -123,13 +121,22 @@ class Map {
         return text;
     }
 
+    /**
+     * Helper function added to remove spaces from conference
+     * names when bubbles are being classed.
+     * @param {string} input 
+     */
+    removeSpace(input)
+    {
+        let str = input.replace(/\s/g, '');
+        return str;
+    }
+
     /*
     * Updates the circles on the map representing the schools when the year changes.
     */
-    updateMap() {
-
-
-
+    updateMap()
+    {
         let map = d3.select("#map-chart").select("svg");
 
         d3.selectAll(".d3-tip").remove();
@@ -166,35 +173,34 @@ class Map {
             .attr("cx", (d) => d.Proj_Long)
             .attr("cy", (d) => d.Proj_Lat)
             .attr("r", 5)
-            .attr("class", (d) => d.School)
-            .style("fill", "red")
-            .style("opacity", 0.6)
+            .attr("class", (d) => this.removeSpace(d.Conference))
+            .style("opacity", 0.8)
             .on("mouseover", this.tip.show)
             .on("mouseout", this.tip.hide)
-        //TODO:
-            .on("click", d=> {
-
+            .on("click", d => {
                 //create lineChart object
                 let lineChart = new LineChart(d);
                 lineChart.drawLineChart();
-
             });
-
-
     }
 
-    async drawDropdown() {
-
+    async drawDropdown()
+    {
         let conferences;
-        if (this.activeYear < 2011) {
+        if (this.activeYear < 2011)
+        {
             conferences = ["All Conferences", "ACC", "Big 12", "Big East", "Big Ten", "C-USA", "Independent",
                 "MAC", "MW", "Pac-10", "SEC", "Sun Belt", "WAC"];
-        } else if (this.activeYear < 2013){
+        }
+        else if (this.activeYear < 2013)
+        {
             conferences = ["All Conferences", "ACC", "Big 12", "Big East", "Big Ten", "C-USA", "Independent",
                 "MAC", "MW", "Pac-12", "SEC", "Sun Belt", "WAC"];
-        } else {
+        }
+        else
+        {
             conferences = ["All Conferences", "ACC", "American", "Big 12", "Big Ten", "C-USA", "Independent",
-                "MAC", "MW", "Pac-12", "SEC", "Sun Belt", "WAC"];
+                "MAC", "MW", "Pac-12", "SEC", "Sun Belt"];
         }
 
         //d3.selectAll("select").remove(); //Causing an issue w/ the select boxes in plot
@@ -206,7 +212,6 @@ class Map {
 
         let options = dropDown.selectAll("option").data(conferences).enter().append("option");
 
-
         options
             .text(function (d) {
                 return d
@@ -215,16 +220,13 @@ class Map {
                 return d
             });
 
-
         let that = this;
 
         let schoolCSV = await d3.csv("data/Project_Data.csv");
 
         let coordData = await d3.csv("data/Coordinates.csv");
 
-        dropDown
-
-            .on("change", function () {
+        dropDown.on("change", function () {
 
                 //this is our selected value from the dropdown
                 let selectedConference = d3.event.target.value;
@@ -266,12 +268,6 @@ class Map {
                 //create a new map object and call its update function so that it renders with the new data
                 let map = new Map(selectedSchoolNodes, coordinates, that.activeYear);
                 map.updateMap();
-
-            });
-
-
-
-
+        });
     }
-
 }

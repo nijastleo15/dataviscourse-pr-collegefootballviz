@@ -2,7 +2,6 @@
     font-family: 'Roboto', sans-serif;
 } */
 
-
 /*classes for the line graph*/
 
 /*path {*/
@@ -12,7 +11,8 @@
 /*}*/
 
 .axis path,
-.axis line {
+.axis line
+{
     fill: none;
     stroke: grey;
     stroke-width: 1;
@@ -57,9 +57,8 @@
 
 .states
 {
-    fill: #addd8e;
-    /* fill: #99d8c9; */
-    /* fill: green; */
+    /* fill: #addd8e; */
+    fill: rgb(225, 225, 225);
 }
 
 .state-borders
@@ -140,6 +139,76 @@
     color: rgba(0, 0, 0, 0.8);
     border-radius: 10px;
     pointer-events: none;
+}
+
+.ACC
+{
+    fill: yellow
+}
+
+.BigTen
+{
+    fill: blue;
+}
+
+.Big12
+{
+    fill: green
+}
+
+.Pac-10
+{
+    fill: red;
+}
+
+.Pac-12
+{
+    fill: red;
+}
+
+.SEC
+{
+    fill: darkorange
+}
+
+.American
+{
+    fill: brown
+}
+
+.BigEast
+{
+    fill: brown
+}
+
+.MW
+{
+    fill: purple
+}
+
+.WAC
+{
+    fill: hotpink
+}
+
+.MAC
+{
+    fill: skyblue
+}
+
+.C-USA
+{
+    fill: #39ff14
+}
+
+.SunBelt
+{
+    fill: #DAA520
+}
+
+.Independent
+{
+    fill: black
 }
 
 /*Element Styling*/
