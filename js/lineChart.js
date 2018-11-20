@@ -133,29 +133,26 @@ class LineChart
 
         d3.select("#line-chart").selectAll("path").remove();
 
-        //append line for y1 axis. Make sure the translation is the same as yAxisLeft
+        //append line for y1 axis
         lineSVG.append("path")
             .attr("d", valueLine1(line1Data))
             .attr("stroke", "steelblue")
             .attr("stroke-width", 2)
             .attr("fill", "none")
-            //.attr("transform", "translate(" + 75 + "," + 40 + ")")
             .attr("transform", "translate(" + 75 + "," + 25 + ")")
             .classed("leftLine", true);
 
-        //append line for y2 axis. Make sure the translation is the same as yAxisLeft
+        //append line for y2 axis
         lineSVG.append("path")
             .attr("d", valueLine2(line2Data))
             .attr("stroke", "red")
             .attr("stroke-width", 2)
             .attr("fill", "none")
-            //.attr("transform", "translate(" + 75 + "," + 40 + ")")
             .attr("transform", "translate(" + 75 + "," + 25 + ")")
             .classed("rightLine", true);
 
 
         lineSVG.append("g").call(xAxis)
-        //.attr("transform", "translate(" + 75 + "," + 780 + ")");
             .attr("transform", "translate(" + 75 + "," + 765 + ")");
 
 
@@ -186,6 +183,14 @@ class LineChart
             .attr("x", 370)
             .classed("rightAxisLabel", true)
             .text("Expenses");
+
+
+        lineSVG.append("text")
+            .attr("x", 100)
+            .attr("y", 150)
+            .style("font-size", 24)
+            .style("fill", "grey")
+            .text(this.selectedSchool);
 
         let dropdownWrap = d3.select('#line-chart').append('div').classed("dropDownWrapper", true);
 
@@ -420,9 +425,7 @@ class LineChart
 
 
 
-    }
 
-    updateDropDown() {
 
 
     }
