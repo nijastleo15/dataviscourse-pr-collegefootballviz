@@ -59,7 +59,9 @@ d3.csv("data/Project_Data.csv").then(school_data => {
         //profileTable = new ProfileTable(school_data);
 
         gapPlot = new GapPlot(school_data, updateCountry, updateYear, defaultYear); //commenting this out removed second year slider
-        gapPlot.updatePlot(2012, 'Revenues', 'Undergrads', 'Wins');
+        // gapPlot.updatePlot(2012, 'Revenues', 'Undergrads', 'Wins');
+        gapPlot.updatePlot(school_data, 2012, 'Revenues', 'Undergrads', 'Wins');
+
         yearSlider = new YearSlider(defaultYear, mapChart, gapPlot);
 
     })

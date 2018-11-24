@@ -46,7 +46,7 @@ class YearSlider
                     map.updateMap();
                     map.drawDropdown();
                     //let scatter = new ScatterPlot();
-                    console.log('scatter x ind ', that.scatterplot.xIndicator);
+                    // console.log('scatter x ind ', that.scatterplot.xIndicator);
                     that.scatterplot.updatePlot(this.value, that.scatterplot.xIndicator, that.scatterplot.yIndicator, that.scatterplot.circleSizeIndicator);
                     d3.select("#line-chart").select("svg").remove();
                     d3.select("#line-chart").select(".dropDownWrapper").remove();

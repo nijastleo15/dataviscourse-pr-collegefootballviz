@@ -124,7 +124,7 @@ class Map
     /**
      * Helper function added to remove spaces from conference
      * names when bubbles are being classed.
-     * @param {string} input 
+     * @param {string} input
      */
     removeSpace(input)
     {
@@ -181,6 +181,10 @@ class Map
                 //create lineChart object
                 let lineChart = new LineChart(d);
                 lineChart.drawLineChart();
+
+                //j. guessing this is where updateplot should get called.
+                //Pass in selected school to have a stroke outline?
+
             });
     }
 
@@ -268,6 +272,11 @@ class Map
                 //create a new map object and call its update function so that it renders with the new data
                 let map = new Map(selectedSchoolNodes, coordinates, that.activeYear);
                 map.updateMap();
+
+                //j. edits
+                // let gapPlot = new GapPlot(selectedSchoolNodes, updateCountry, updateYear, defaultYear);
+                gapPlot.updatePlot(selectedSchoolNodes, that.activeYear, 'Revenues', 'Undergrads', 'Wins');
+
         });
     }
 }

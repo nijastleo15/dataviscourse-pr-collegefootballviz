@@ -46,14 +46,9 @@ class GapPlot
         this.updateCountry = updateCountry;
         this.updateYear = updateYear;
 
-        // console.log(this.activeYear);
-        // console.log(this.data);
         let stuff = this.data.filter(d => {
-          // console.log(d.Year);
-          // console.log(this.activeYear);
           return +d.Year === this.activeYear
         });
-        // console.log('stuff', stuff);
     }
 
     /**
@@ -150,8 +145,12 @@ class GapPlot
      * @param yIndicator identifies the values to use for the y axis
      * @param circleSizeIndicator identifies the values to use for the circle size
      */
-    updatePlot(activeYear, xIndicator, yIndicator, circleSizeIndicator)
+    // updatePlot(activeYear, xIndicator, yIndicator, circleSizeIndicator)
+    updatePlot(schoolData, activeYear, xIndicator, yIndicator, circleSizeIndicator)
     {
+        //added
+        this.data = schoolData;
+
         this.xIndicator = xIndicator;
         this.yIndicator = yIndicator;
         this.circleSizeIndicator = circleSizeIndicator;
@@ -222,12 +221,9 @@ class GapPlot
         let plotData = plotData2;
 
         //////Find the max for the X and Y data
-        // console.log('xds', xDataSport);
-        // console.log('yds', yDataSport);
         let maxX = d3.max(xDataSport);
         let maxY = d3.max(yDataSport);
 
-        // console.log('maxX: ', maxX, ' // maxY: ', maxY);
         //Find the min and max size for the circle data
         let maxSize = d3.max(sizeDataSport);
         let minSize = d3.min(sizeDataSport);
@@ -388,7 +384,9 @@ class GapPlot
             let cValue = this.options[this.selectedIndex].value;
             let xValue = dropX.node().value;
             let yValue = dropY.node().value;
-            that.updatePlot(that.activeYear, xValue, yValue, cValue);
+            // that.updatePlot(that.activeYear, xValue, yValue, cValue);
+            that.updatePlot(data, that.activeYear, xValue, yValue, cValue);
+
         });
 
         /* X DROPDOWN */
@@ -415,7 +413,9 @@ class GapPlot
             let xValue = this.options[this.selectedIndex].value;
             let yValue = dropY.node().value;
             let cValue = dropC.node().value;
-            that.updatePlot(that.activeYear, xValue, yValue, cValue);
+            // that.updatePlot(that.activeYear, xValue, yValue, cValue);
+            that.updatePlot(that.data, that.activeYear, xValue, yValue, cValue);
+
         });
 
         /* Y DROPDOWN */
@@ -442,7 +442,9 @@ class GapPlot
             let yValue = this.options[this.selectedIndex].value;
             let xValue = dropX.node().value;
             let cValue = dropC.node().value;
-            that.updatePlot(that.activeYear, xValue, yValue, cValue);
+            // that.updatePlot(that.activeYear, xValue, yValue, cValue);
+            that.updatePlot(that.data, that.activeYear, xValue, yValue, cValue);
+
         });
     }
 
@@ -492,7 +494,7 @@ class GapPlot
         // d3 selection and .classed to set these classes on here.
         // You will not be calling this directly in the gapPlot class,
         // you will need to call it from the updateHighlight function in script.js
-        
+
         this.clearHighlight();
         //highlight bubbles
         let bubbleRegion = d3.select('#scatter-plot').selectAll('.bubble')
