@@ -24,7 +24,7 @@ class GapPlot
     /**
      * Creates a new GapPlot Object
      * @param updateCountry a callback function used to notify other parts of the program when the selected
-     * country was updated (clicked)
+     * school was updated (clicked)
      * @param updateYear a callback function used to notify other parts of the program when a year was updated
      * @param activeYear the year for which the data should be drawn initially
      */
@@ -150,6 +150,7 @@ class GapPlot
     {
         //added
         this.data = schoolData;
+        console.log(this.data);
 
         this.xIndicator = xIndicator;
         this.yIndicator = yIndicator;
@@ -162,9 +163,6 @@ class GapPlot
         We have provided the mouse-over for you, but you have to set it up
         Hint: you will need to call the tooltipRender function for this.
 
-        *** call the drawLegend() and drawDropDown()
-        These will draw the legend and the drop down menus in your data
-        Pay attention to the parameters needed in each of the functions
 
         */
 
@@ -182,11 +180,13 @@ class GapPlot
             return d.circleSize ? cScale(d.circleSize) : 3;
         };
 
-        let populationData = this.data.population;
+        // let populationData = this.data.population;
 
         /////// my code
         // console.log(this.data);
+        console.log(data);
         let stuff2 = this.data.filter(d => {
+        // let stuff2 = this.data.map(d => {
           return +d.Year == activeYear
         });
         // console.log('update stuff2 for year', activeYear, stuff2);
@@ -216,7 +216,6 @@ class GapPlot
         let sizeDataSport = this.data.map(d => {
             return +d[circleSizeIndicator];
         })
-        // console.log(xDataSport);
 
         let plotData = plotData2;
 
@@ -320,7 +319,6 @@ class GapPlot
         let that = this;
         let dropDownWrapper = d3.select('.dropdown-wrapper');
         let dropData = [];
-        //Hardcoded this since our dataset was much cleaner so that loop below didn't work
             dropData.push({
                 indicator: 'Expenses',
                 indicator_name: 'Expenses'
@@ -351,15 +349,6 @@ class GapPlot
             }
           );
 
-        // }
-        // for (let key in this.data) {
-        //   console.log('key', key);
-        //     dropData.push({
-        //         indicator: key,
-        //         indicator_name: this.data[key][0].indicator_name
-        //     });
-        // }
-
         /* CIRCLE DROPDOWN */
         let dropC = dropDownWrapper.select('#dropdown_c').select('.dropdown-content').select('select'); //.select('select')??
 
@@ -385,7 +374,7 @@ class GapPlot
             let xValue = dropX.node().value;
             let yValue = dropY.node().value;
             // that.updatePlot(that.activeYear, xValue, yValue, cValue);
-            that.updatePlot(data, that.activeYear, xValue, yValue, cValue);
+            that.updatePlot(that.data, that.activeYear, xValue, yValue, cValue);
 
         });
 
