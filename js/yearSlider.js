@@ -47,7 +47,9 @@ class YearSlider
                     map.drawDropdown();
                     //let scatter = new ScatterPlot();
                     // console.log('scatter x ind ', that.scatterplot.xIndicator);
-                    that.scatterplot.updatePlot(this.value, that.scatterplot.xIndicator, that.scatterplot.yIndicator, that.scatterplot.circleSizeIndicator);
+                    // that.scatterplot.updatePlot(this.value, that.scatterplot.xIndicator, that.scatterplot.yIndicator, that.scatterplot.circleSizeIndicator);
+                    that.scatterplot.updatePlot(school_data, this.value, that.scatterplot.xIndicator, that.scatterplot.yIndicator, that.scatterplot.circleSizeIndicator);
+
                     d3.select("#line-chart").select("svg").remove();
                     d3.select("#line-chart").select(".dropDownWrapper").remove();
                 })
