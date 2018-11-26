@@ -1,4 +1,4 @@
-## Welcome to GitHub Pages
+## Impact of Money on College Football
 
 You can use the [editor on GitHub](https://github.com/nijastleo15/dataviscourse-pr-collegefootballviz/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
 
