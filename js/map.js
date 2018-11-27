@@ -31,6 +31,10 @@ class Map
             .offset(function () {
                 return [0, 0];
             })
+
+        //j. added
+        let selectedSchoolNodes = [];
+
     }
 
     /**
@@ -181,6 +185,7 @@ class Map
                 //create lineChart object
                 let lineChart = new LineChart(d);
                 lineChart.drawLineChart();
+                gapPlot.updatePlot(null, null, d, 'Revenues', 'Undergrads', 'Wins');
 
                 //j. guessing this is where updateplot should get called.
                 //Pass in selected school to have a stroke outline?
@@ -247,9 +252,13 @@ class Map
                 schoolData.forEach(d => {
                     if (selectedConference === "All Conferences"){
                         selectedSchoolNodes = schoolData;
+                        // that.selectedSchoolNodes = schoolData;
+
 
                     } else if (d.Conference === selectedConference) {
                         selectedSchoolNodes.push(d)
+                        // that.selectedSchoolNodes.push(d);
+
                     }
                 });
 
@@ -275,7 +284,8 @@ class Map
 
                 //j. edits
                 // let gapPlot = new GapPlot(selectedSchoolNodes, updateCountry, updateYear, defaultYear);
-                gapPlot.updatePlot(selectedSchoolNodes, that.activeYear, 'Revenues', 'Undergrads', 'Wins');
+                // gapPlot.updatePlot(selectedSchoolNodes, that.activeYear, 'Revenues', 'Undergrads', 'Wins');
+                gapPlot.updatePlot(selectedSchoolNodes, that.activeYear, null, 'Revenues', 'Undergrads', 'Wins');
 
         });
     }

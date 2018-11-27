@@ -52,15 +52,13 @@ d3.csv("data/Project_Data.csv").then(school_data => {
         mapChart = new Map(school_data, coordinates, defaultYear);
         //d3.select("#map-dropdown").select("select").remove();
         //mapChart.drawDropdown(); //I think this just calls it on the first rendering.
-
-
-
         //scatterPlot = new scatterPlot(school_data);
         //profileTable = new ProfileTable(school_data);
 
         gapPlot = new GapPlot(school_data, updateCountry, updateYear, defaultYear); //commenting this out removed second year slider
         // gapPlot.updatePlot(2012, 'Revenues', 'Undergrads', 'Wins');
-        gapPlot.updatePlot(school_data, 2012, 'Revenues', 'Undergrads', 'Wins');
+        // gapPlot.updatePlot(school_data, 2012, 'Revenues', 'Undergrads', 'Wins');
+        gapPlot.updatePlot(school_data, 2012, null, 'Revenues', 'Undergrads', 'Wins');
 
         yearSlider = new YearSlider(defaultYear, mapChart, gapPlot);
 

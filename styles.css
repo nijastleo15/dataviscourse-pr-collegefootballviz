@@ -46,6 +46,11 @@
 
 }
 
+#selected
+{
+  stroke: #000000;
+}
+
 .view
 {
     width: 1000px;

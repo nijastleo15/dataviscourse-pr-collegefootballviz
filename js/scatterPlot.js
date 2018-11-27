@@ -10,7 +10,9 @@ class PlotData
   */
   constructor (school, xVal, yVal, conference, circleSize)
   {
-    this.school = school;
+    // this.school = school;
+    this.School = school;
+
     this.xVal = xVal;
     this.yVal = yVal;
     this.conference = conference;
@@ -49,6 +51,9 @@ class GapPlot
     let stuff = this.data.filter(d => {
       return +d.Year === this.activeYear
     });
+
+    this.selectedNode = null;
+    this.selectedSchool = null;
   }
 
   /**
@@ -146,33 +151,40 @@ class GapPlot
   * @param circleSizeIndicator identifies the values to use for the circle size
   */
   // updatePlot(activeYear, xIndicator, yIndicator, circleSizeIndicator)
-  updatePlot(schoolData, activeYear, xIndicator, yIndicator, circleSizeIndicator)
+  // updatePlot(schoolData, activeYear, xIndicator, yIndicator, circleSizeIndicator)
+  updatePlot(schoolData, activeYear, selectedSchoolNode, xIndicator, yIndicator, circleSizeIndicator)
   {
-    //added
-    // let data = schoolData;
-    this.data = schoolData;
-    console.log(this.data);
-    console.log(schoolData);
+    if(schoolData == null) {
+    }
+    else {
+      this.data = schoolData;
+    }
+
+    if(activeYear == null) {
+    }
+    else {
+      this.activeYear = activeYear;
+    }
+
+    // this.activeYear = activeYear;
 
     this.xIndicator = xIndicator;
     this.yIndicator = yIndicator;
     this.circleSizeIndicator = circleSizeIndicator;
-    /*
-    You will be updating the scatterplot from the data. hint: use the #chart-view div
+    if(selectedSchoolNode != null){
+      this.schoolNode = selectedSchoolNode;
+    }
 
-    ***Tooltip for the bubbles***
-    You need to assign a tooltip to appear on mouse-over of a country bubble to show the name of the country.
-    We have provided the mouse-over for you, but you have to set it up
-    Hint: you will need to call the tooltipRender function for this.
+    if(this.schoolNode != null){
+      this.selectedSchool = this.schoolNode['School'];
+    }
 
 
-    */
-
+    // console.log(this.selectedSchool);
     /**
     *  Function to determine the circle radius by circle size
     *  This is the function to size your circles, you don't need to do anything to this
     *  but you will call it and pass the circle data as the parameter.
-    *
     * @param d the data value to encode
     * @returns {number} the radius
     */
@@ -182,19 +194,15 @@ class GapPlot
       return d.circleSize ? cScale(d.circleSize) : 3;
     };
 
-    // let populationData = this.data.population;
 
     /////// my code
-    // console.log(this.data);
     console.log('this.data', this.data);
     let stuff2 = this.data.filter(d => {
       // let stuff2 = this.data.map(d => {
-      return +d.Year == activeYear
+      return +d.Year == this.activeYear
     });
-    // console.log('update stuff2 for year', activeYear, stuff2);
-
+    console.log(stuff2);
     let that = this;
-    this.activeYear = activeYear;
 
     let plotData2 = stuff2.map(d => {
       let yValue = d[yIndicator];
@@ -277,6 +285,28 @@ class GapPlot
       return yScale(+d.yVal);
     });
 
+    //ID the selectedschool
+    console.log('sel school pre id ', this.selectedSchool);
+    circles.attr('id', (d) => {
+      // if(d.school === this.selectedSchool) {
+      if(d.School === this.selectedSchool) {
+
+        return 'selected';
+      }
+    });
+
+    let selectedCircle = d3.select('#selected');
+    selectedCircle.remove();
+    console.log('sel circ', selectedCircle);
+    group.append(selectedCircle);
+
+
+
+
+
+
+
+
     //Add the tooltip labels on mouseover
     circles.on('mouseover', function(d, i) {
       //show tooltip
@@ -296,10 +326,15 @@ class GapPlot
 
     //Click function for circle selection
     circles.on('click', (d) => {
+      console.log('circle fx that.data ', that.data);
+      console.log(d);
+      let lineChart = new LineChart(d);
+      lineChart.drawLineChart();
+
       event.stopPropagation();
-      let countryID = { id: d.id, region: d.region };
-      that.clearHighlight();
-      that.updateCountry(countryID);
+      // let countryID = { id: d.id, region: d.region };
+      // that.clearHighlight();
+      // that.updateCountry(countryID);
     });
 
     if (this.activeCountry) {
@@ -376,7 +411,8 @@ class GapPlot
     let xValue = dropX.node().value;
     let yValue = dropY.node().value;
     // that.updatePlot(that.activeYear, xValue, yValue, cValue);
-    that.updatePlot(that.data, that.activeYear, xValue, yValue, cValue);
+    // that.updatePlot(that.data, that.activeYear, xValue, yValue, cValue);
+    that.updatePlot(that.data, that.activeYear, that.selectedSchool,  xValue, yValue, cValue);
 
   });
 
@@ -405,7 +441,8 @@ class GapPlot
     let yValue = dropY.node().value;
     let cValue = dropC.node().value;
     // that.updatePlot(that.activeYear, xValue, yValue, cValue);
-    that.updatePlot(that.data, that.activeYear, xValue, yValue, cValue);
+    // that.updatePlot(that.data, that.activeYear, xValue, yValue, cValue);
+    that.updatePlot(that.data, that.activeYear, that.selectedSchool, xValue, yValue, cValue);
 
   });
 
@@ -434,7 +471,8 @@ class GapPlot
     let xValue = dropX.node().value;
     let cValue = dropC.node().value;
     // that.updatePlot(that.activeYear, xValue, yValue, cValue);
-    that.updatePlot(that.data, that.activeYear, xValue, yValue, cValue);
+    // that.updatePlot(that.data, that.activeYear, xValue, yValue, cValue);
+    that.updatePlot(that.data, that.activeYear, that.selectedSchool, xValue, yValue, cValue);
 
   });
 }
@@ -524,7 +562,10 @@ clearHighlight()
 */
 tooltipRender(data)
 {
-  let text = "<h2>" + data['school'] + "</h2>";
+  // let text = "<h2>" + data['school'] + "</h2>";
+  //school changed
+  let text = "<h2>" + data['School'] + "</h2>";
+
   return text;
 }
 }
