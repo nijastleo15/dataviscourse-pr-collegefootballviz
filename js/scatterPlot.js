@@ -10,9 +10,7 @@ class PlotData
   */
   constructor (school, xVal, yVal, conference, circleSize)
   {
-    // this.school = school;
     this.School = school;
-
     this.xVal = xVal;
     this.yVal = yVal;
     this.conference = conference;
@@ -30,14 +28,16 @@ class GapPlot
   * @param updateYear a callback function used to notify other parts of the program when a year was updated
   * @param activeYear the year for which the data should be drawn initially
   */
-  constructor (data, updateCountry, updateYear, activeYear)
+  constructor (data, activeYear)
   {
     this.margin = { top: 20, right: 20, bottom: 60, left: 80 };
     this.width = 810 - this.margin.left - this.margin.right;
     this.height = 500 - this.margin.top - this.margin.bottom;
-    this.activeYear = activeYear;
 
+    this.activeYear = activeYear;
     this.data = data;
+    this.selectedNode = null;
+    this.selectedSchool = null;
 
     this.xIndicator = null;
     this.yIndicator = null;
@@ -45,15 +45,6 @@ class GapPlot
 
     this.drawPlot();
 
-    this.updateCountry = updateCountry;
-    this.updateYear = updateYear;
-
-    let stuff = this.data.filter(d => {
-      return +d.Year === this.activeYear
-    });
-
-    this.selectedNode = null;
-    this.selectedSchool = null;
   }
 
   /**
@@ -150,69 +141,59 @@ class GapPlot
   * @param yIndicator identifies the values to use for the y axis
   * @param circleSizeIndicator identifies the values to use for the circle size
   */
-  // updatePlot(activeYear, xIndicator, yIndicator, circleSizeIndicator)
-  // updatePlot(schoolData, activeYear, xIndicator, yIndicator, circleSizeIndicator)
   updatePlot(schoolData, activeYear, selectedSchoolNode, xIndicator, yIndicator, circleSizeIndicator)
   {
+    //Check to see if null passed in. Keep fields the same if so.
     if(schoolData == null) {
-    }
-    else {
+    } else {
       this.data = schoolData;
     }
 
     if(activeYear == null) {
-    }
-    else {
+    } else {
       this.activeYear = activeYear;
     }
-
-    // this.activeYear = activeYear;
 
     this.xIndicator = xIndicator;
     this.yIndicator = yIndicator;
     this.circleSizeIndicator = circleSizeIndicator;
+
+    //Make sure selectedSchoolNode exists before setting node
     if(selectedSchoolNode != null){
       this.schoolNode = selectedSchoolNode;
     }
-
+    //save the selectedschool name
     if(this.schoolNode != null){
       this.selectedSchool = this.schoolNode['School'];
     }
 
-
-    // console.log(this.selectedSchool);
     /**
     *  Function to determine the circle radius by circle size
-    *  This is the function to size your circles, you don't need to do anything to this
-    *  but you will call it and pass the circle data as the parameter.
     * @param d the data value to encode
     * @returns {number} the radius
     */
-    let circleSizer = function(d)
-    {
+    let circleSizer = function(d) {
       let cScale = d3.scaleSqrt().range([3, 20]).domain([minSize, maxSize]);
       return d.circleSize ? cScale(d.circleSize) : 3;
     };
 
-
-    /////// my code
-    console.log('this.data', this.data);
-    let stuff2 = this.data.filter(d => {
-      // let stuff2 = this.data.map(d => {
+    let tempData = this.data.filter(d => {
       return +d.Year == this.activeYear
     });
-    console.log(stuff2);
     let that = this;
 
-    let plotData2 = stuff2.map(d => {
+    let plotData = tempData.map(d => {
       let yValue = d[yIndicator];
       let xValue = d[xIndicator];
       let circleSize = d[circleSizeIndicator];
-      //// constructor(school, xVal, yVal, conference, circleSize) {
-      return new PlotData(d.School, xValue, yValue, d.Conference, circleSize);
+
+      if(circleSize != -1 && xValue != -1 && yValue != -1) {
+        return new PlotData(d.School, xValue, yValue, d.Conference, circleSize);
+      }
     });
-    plotData2 = plotData2.filter(p => p != null);
-    ///
+
+
+    plotData = plotData.filter(p => p != null);
 
     let tooltip = d3.select('.tooltip');
 
@@ -227,9 +208,7 @@ class GapPlot
       return +d[circleSizeIndicator];
     })
 
-    let plotData = plotData2;
-
-    //////Find the max for the X and Y data
+    //Find the max for the X and Y data
     let maxX = d3.max(xDataSport);
     let maxY = d3.max(yDataSport);
 
@@ -266,7 +245,6 @@ class GapPlot
 
     //Add the schools as circles
     let circles = group.selectAll('circle').data(plotData);
-
     circles.exit().remove();
 
     let circleEnter = circles
@@ -284,27 +262,32 @@ class GapPlot
     .attr("cy", function(d) {
       return yScale(+d.yVal);
     });
+    // .style("opacity", .5);
 
-    //ID the selectedschool
-    console.log('sel school pre id ', this.selectedSchool);
-    circles.attr('id', (d) => {
+
+
+    //ID the selected school
+    // console.log('sel school pre id ', this.selectedSchool);
+    // circles.attr('id', (d) => {
+    //   // if(d.school === this.selectedSchool) {
+    //   if(d.School === this.selectedSchool) {
+    //     // console.log(d);
+    //     return 'selected';
+    //   }
+    // });
+
+    circles.classed('selected', (d) => {
       // if(d.school === this.selectedSchool) {
       if(d.School === this.selectedSchool) {
-
-        return 'selected';
+        // console.log(d);
+        return true;
       }
     });
 
-    let selectedCircle = d3.select('#selected');
-    selectedCircle.remove();
-    console.log('sel circ', selectedCircle);
-    group.append(selectedCircle);
 
-
-
-
-
-
+    // console.log('sel circ', selectedCircle);
+    // group.append(selectedCircle);
+    //
 
 
     //Add the tooltip labels on mouseover
@@ -317,29 +300,55 @@ class GapPlot
       .style("left", (d3.event.pageX) + "px")
       .style("top", (d3.event.pageY - 28) + "px");
     });
-    //hover function for country selection
+
+    //hover function
     circles.on("mouseout", function(d) {
       tooltip.transition()
       .duration(500)
       .style("opacity", 0);
     });
 
+
     //Click function for circle selection
     circles.on('click', (d) => {
-      console.log('circle fx that.data ', that.data);
+      that.selectedSchool = d.School;
       console.log(d);
+      console.log('that', that);
+      console.log('circle fx that.data ', that.data);
+      let temp = d3.selectAll('circle');
+      console.log('circles', temp);
+      // temp.attr('id', (d) => {
+      //   // if(d.school === this.selectedSchool) {
+      //   if(d.School === that.selectedSchool) {
+      //     console.log(d.School);
+      //     return 'selected';
+      //   }
+
+      // });
+      temp.classed('selected', false);
+      temp.classed('selected', (d) => {
+        if(d.School === that.selectedSchool) {
+          return true;
+        }
+
+      });
+      let selectedCircle = d3.select('#selected');
+      console.log('sc', selectedCircle);
+      selectedCircle.style("opacity", 1);
+
       let lineChart = new LineChart(d);
       lineChart.drawLineChart();
-
       event.stopPropagation();
-      // let countryID = { id: d.id, region: d.region };
-      // that.clearHighlight();
-      // that.updateCountry(countryID);
     });
 
-    if (this.activeCountry) {
-      that.updateHighlightClick(activeCountry);
-    }
+    let selectedCircle = d3.select('#selected');
+    selectedCircle.style("opacity", 1);
+
+    circles.classed('selected', (d) => {
+      if(d.School === that.selectedSchool) {
+        return true;
+      }
+    });
 
     this.drawLegend(minSize, maxSize);
     this.drawDropDown(xIndicator, yIndicator, circleSizeIndicator);
@@ -410,10 +419,7 @@ class GapPlot
     let cValue = this.options[this.selectedIndex].value;
     let xValue = dropX.node().value;
     let yValue = dropY.node().value;
-    // that.updatePlot(that.activeYear, xValue, yValue, cValue);
-    // that.updatePlot(that.data, that.activeYear, xValue, yValue, cValue);
     that.updatePlot(that.data, that.activeYear, that.selectedSchool,  xValue, yValue, cValue);
-
   });
 
   /* X DROPDOWN */
@@ -440,8 +446,6 @@ class GapPlot
     let xValue = this.options[this.selectedIndex].value;
     let yValue = dropY.node().value;
     let cValue = dropC.node().value;
-    // that.updatePlot(that.activeYear, xValue, yValue, cValue);
-    // that.updatePlot(that.data, that.activeYear, xValue, yValue, cValue);
     that.updatePlot(that.data, that.activeYear, that.selectedSchool, xValue, yValue, cValue);
 
   });
@@ -470,10 +474,7 @@ class GapPlot
     let yValue = this.options[this.selectedIndex].value;
     let xValue = dropX.node().value;
     let cValue = dropC.node().value;
-    // that.updatePlot(that.activeYear, xValue, yValue, cValue);
-    // that.updatePlot(that.data, that.activeYear, xValue, yValue, cValue);
     that.updatePlot(that.data, that.activeYear, that.selectedSchool, xValue, yValue, cValue);
-
   });
 }
 
@@ -510,20 +511,36 @@ drawLegend(min, max)
   numText.attr('transform', (d) => 'translate(' + ((scale(d)) + 10) + ', 0)');
 }
 
+
+
+
+/**
+* Returns html that can be used to render the tooltip.
+* @param data
+* @returns {string}
+*/
+tooltipRender(data)
+{
+  // let text = "<h2>" + data['school'] + "</h2>";
+  //school changed
+  let text = "<h2>" + data['School'] + "</h2>";
+
+  return text;
+}
+
+
+
+
+}
+/**
+Storage
+
 /**
 * Reacts to a highlight/click event for a country; draws that country darker
 * and fades countries on other continents out
 * @param activeCountry
-*/
 updateHighlightClick(activeCountry)
 {
-  // You need to assign selected class to the target country and corresponding region
-  // Hint: If you followed our suggestion of using classes to style
-  // the colors and markers for countries/regions, you can use
-  // d3 selection and .classed to set these classes on here.
-  // You will not be calling this directly in the gapPlot class,
-  // you will need to call it from the updateHighlight function in script.js
-
   this.clearHighlight();
   //highlight bubbles
   let bubbleRegion = d3.select('#scatter-plot').selectAll('.bubble')
@@ -536,9 +553,8 @@ updateHighlightClick(activeCountry)
   .classed('selected-country', true);
 }
 
-/**
 * Clears any highlights
-*/
+
 clearHighlight()
 {
   // Clear the map of any colors/markers; You can do this with inline styling or by
@@ -555,17 +571,10 @@ clearHighlight()
   .classed('hidden', false);
 }
 
-/**
-* Returns html that can be used to render the tooltip.
-* @param data
-* @returns {string}
-*/
-tooltipRender(data)
-{
-  // let text = "<h2>" + data['school'] + "</h2>";
-  //school changed
-  let text = "<h2>" + data['School'] + "</h2>";
+// if (this.activeCountry) {
+//   that.updateHighlightClick(activeCountry);
+// }
 
-  return text;
-}
-}
+
+
+*/

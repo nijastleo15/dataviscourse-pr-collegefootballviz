@@ -185,10 +185,8 @@ class Map
                 //create lineChart object
                 let lineChart = new LineChart(d);
                 lineChart.drawLineChart();
+                //Update scatter
                 gapPlot.updatePlot(null, null, d, 'Revenues', 'Undergrads', 'Wins');
-
-                //j. guessing this is where updateplot should get called.
-                //Pass in selected school to have a stroke outline?
 
             });
     }
@@ -283,8 +281,6 @@ class Map
                 map.updateMap();
 
                 //j. edits
-                // let gapPlot = new GapPlot(selectedSchoolNodes, updateCountry, updateYear, defaultYear);
-                // gapPlot.updatePlot(selectedSchoolNodes, that.activeYear, 'Revenues', 'Undergrads', 'Wins');
                 gapPlot.updatePlot(selectedSchoolNodes, that.activeYear, null, 'Revenues', 'Undergrads', 'Wins');
 
         });

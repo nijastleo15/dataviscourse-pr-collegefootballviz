@@ -49,6 +49,21 @@
 #selected
 {
   stroke: #000000;
+  stroke-width: 2;
+}
+
+circle.selected{
+  stroke: #000000;
+  stroke-width: 2;
+  opacity: 1;
+}
+.activeYear-background {
+    font-size: 70px;
+    opacity: .5;
+}
+
+circle {
+  opacity: .5;
 }
 
 .view
@@ -538,7 +553,4 @@ i.europe {
     color: #AD1457;
 }
 
-.activeYear-background {
-    font-size: 80px;
-    opacity: .4;
-} */
+ */

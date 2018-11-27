@@ -17,21 +17,7 @@ class LineChart
         this.height = 800 - margin.top - margin.bottom;
 
         this.schoolNode = schoolNode;
-
-        //j. added
-        console.log(this.schoolNode);
-
-        //j. added
-        // if(schoolNode instanceof PlotData){
-        //   this.selectedSchool = schoolNode['School'];
-        //
-        // }
-
         this.selectedSchool = schoolNode['School'];
-
-        //j. added
-        console.log(this.selectedSchool);
-
     }
 
     async drawLineChart() {
@@ -429,16 +415,6 @@ class LineChart
                     .text(selectedDataset);
 
             });
-
-
-
-
-
-
-
-
-
-
 
     }
 
