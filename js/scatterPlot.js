@@ -217,7 +217,7 @@ class GapPlot
     let minSize = d3.min(sizeDataSport);
 
     //Set x and y scales
-    let xScale = d3.scaleLinear().range([0, this.width]).domain([0, maxX]).nice();
+    let xScale = d3.scaleLinear().range([0, this.width-30]).domain([0, maxX]).nice();
     let yScale = d3.scaleLinear().range([this.height, 0]).domain([0, maxY]).nice();
 
     let group = d3.select('#chart-view').select('.plot-svg').select('.wrapper-group');
