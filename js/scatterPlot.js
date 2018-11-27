@@ -54,34 +54,34 @@ class GapPlot
   {
     //Create svg groups, etc.
     d3.select('#scatter-plot')
-    .append('div').attr('id', 'chart-view');
+          .append('div').attr('id', 'chart-view');
 
     d3.select('#scatter-plot')
-    .append('div').attr('id', 'activeYear-bar');
+          .append('div').attr('id', 'activeYear-bar');
 
     d3.select('#chart-view')
-    .append('div')
-    .attr("class", "tooltip")
-    .style("opacity", 0);
+          .append('div')
+          .attr("class", "tooltip")
+          .style("opacity", 0);
 
     d3.select('#chart-view')
-    .append('svg').classed('plot-svg', true)
-    .attr("width", this.width + this.margin.left + this.margin.right)
-    .attr("height", this.height + this.margin.top + this.margin.bottom);
+          .append('svg').classed('plot-svg', true)
+          .attr("width", this.width + this.margin.left + this.margin.right)
+          .attr("height", this.height + this.margin.top + this.margin.bottom);
 
     let svgGroup = d3.select('#chart-view').select('.plot-svg').append('g').classed('wrapper-group', true);
 
     svgGroup.append('text').classed('activeYear-background', true)
-    .attr('transform', 'translate(100, 100)');
+          .attr('transform', 'translate(100, 100)');
 
     svgGroup.append("g")
-    .classed("x-axis", true)
-    .attr("transform", "translate(0," + this.height + ")");
+          .classed("x-axis", true)
+          .attr("transform", "translate(0," + this.height + ")");
 
     svgGroup.append('text').classed('axis-label-x', true);
 
     svgGroup.append("g")
-    .attr("class", "y-axis");
+          .attr("class", "y-axis");
 
     svgGroup.append('text').classed('axis-label-y', true);
 
@@ -91,36 +91,36 @@ class GapPlot
     let cWrap = dropdownWrap.append('div').classed('dropdown-panel', true);
 
     cWrap.append('div').classed('c-label', true)
-    .append('text')
-    .text('Circle Size');
+          .append('text')
+          .text('Circle Size');
 
     cWrap.append('div').attr('id', 'dropdown_c').classed('dropdown', true).append('div').classed('dropdown-content', true)
-    .append('select');
+          .append('select');
 
     let xWrap = dropdownWrap.append('div').classed('dropdown-panel', true);
 
     xWrap.append('div').classed('x-label', true)
-    .append('text')
-    .text('X Axis Data');
+          .append('text')
+          .text('X Axis Data');
 
     xWrap.append('div').attr('id', 'dropdown_x').classed('dropdown', true).append('div').classed('dropdown-content', true)
-    .append('select');
+          .append('select');
 
     let yWrap = dropdownWrap.append('div').classed('dropdown-panel', true);
 
     yWrap.append('div').classed('y-label', true)
-    .append('text')
-    .text('Y Axis Data');
+          .append('text')
+          .text('Y Axis Data');
 
     yWrap.append('div').attr('id', 'dropdown_y').classed('dropdown', true).append('div').classed('dropdown-content', true)
-    .append('select');
+          .append('select');
 
     d3.select('#chart-view')
-    .append('div')
-    .classed('circle-legend', true)
-    .append('svg')
-    .append('g')
-    .attr('transform', 'translate(10, 0)');
+          .append('div')
+          .classed('circle-legend', true)
+          .append('svg')
+          .append('g')
+          .attr('transform', 'translate(10, 0)');
   }
 
   /**
@@ -227,68 +227,45 @@ class GapPlot
     let yearBg = group.select('.activeYear-background').text(this.activeYear);
 
     let axisXLabel = d3.select('.axis-label-x')
-    // .text((xData[0].indicator_name.toUpperCase()))
-    .style("text-anchor", "middle")
-    .attr('transform', 'translate(' + (this.width / 2) + ', ' + (this.height + 35) + ')');
+          .style("text-anchor", "middle")
+          .attr('transform', 'translate(' + (this.width / 2) + ', ' + (this.height + 35) + ')');
 
     d3.select('.axis-label-y')
-    // .text((yData[0].indicator_name.toUpperCase()))
-    .style("text-anchor", "middle")
-    .attr('transform', 'translate(' + -50 + ', ' + (this.height / 2) + ')rotate(-90)');
+          .style("text-anchor", "middle")
+          .attr('transform', 'translate(' + -50 + ', ' + (this.height / 2) + ')rotate(-90)');
 
     //Add the x and y axis
     let xAxis = d3.select('.x-axis')
-    .call(d3.axisBottom(xScale));
+          .call(d3.axisBottom(xScale));
 
     let yAxis = d3.select('.y-axis')
-    .call(d3.axisLeft(yScale));
+          .call(d3.axisLeft(yScale));
 
     //Add the schools as circles
     let circles = group.selectAll('circle').data(plotData);
     circles.exit().remove();
 
     let circleEnter = circles
-    .enter().append('circle');
+          .enter().append('circle');
 
     circles = circleEnter.merge(circles);
 
+    //Circle Attributes
     circles.attr("class", (d) => this.removeSpace(d.conference))
-    .classed('bubble', true);
+          .classed('bubble', true)
+          .attr("r", (d) => circleSizer(d))
+          .attr("cx", function(d) {
+            return xScale(+d.xVal);
+          })
+          .attr("cy", function(d) {
+            return yScale(+d.yVal);
+          });
 
-    circles.attr("r", (d) => circleSizer(d))
-    .attr("cx", function(d) {
-      return xScale(+d.xVal);
-    })
-    .attr("cy", function(d) {
-      return yScale(+d.yVal);
-    });
-    // .style("opacity", .5);
-
-
-
-    //ID the selected school
-    // console.log('sel school pre id ', this.selectedSchool);
-    // circles.attr('id', (d) => {
-    //   // if(d.school === this.selectedSchool) {
-    //   if(d.School === this.selectedSchool) {
-    //     // console.log(d);
-    //     return 'selected';
-    //   }
-    // });
-
-    circles.classed('selected', (d) => {
-      // if(d.school === this.selectedSchool) {
-      if(d.School === this.selectedSchool) {
-        // console.log(d);
-        return true;
-      }
-    });
-
-
-    // console.log('sel circ', selectedCircle);
-    // group.append(selectedCircle);
-    //
-
+          circles.classed('selected', (d) => {
+            if(d.School === this.selectedSchool) {
+              return true;
+            }
+          });
 
     //Add the tooltip labels on mouseover
     circles.on('mouseover', function(d, i) {
@@ -308,42 +285,21 @@ class GapPlot
       .style("opacity", 0);
     });
 
-
     //Click function for circle selection
     circles.on('click', (d) => {
       that.selectedSchool = d.School;
-      console.log(d);
-      console.log('that', that);
-      console.log('circle fx that.data ', that.data);
       let temp = d3.selectAll('circle');
-      console.log('circles', temp);
-      // temp.attr('id', (d) => {
-      //   // if(d.school === this.selectedSchool) {
-      //   if(d.School === that.selectedSchool) {
-      //     console.log(d.School);
-      //     return 'selected';
-      //   }
-
-      // });
       temp.classed('selected', false);
       temp.classed('selected', (d) => {
         if(d.School === that.selectedSchool) {
           return true;
         }
-
       });
-      let selectedCircle = d3.select('#selected');
-      console.log('sc', selectedCircle);
-      selectedCircle.style("opacity", 1);
-
       let lineChart = new LineChart(d);
       lineChart.drawLineChart();
-      event.stopPropagation();
     });
 
-    let selectedCircle = d3.select('#selected');
-    selectedCircle.style("opacity", 1);
-
+    //
     circles.classed('selected', (d) => {
       if(d.School === that.selectedSchool) {
         return true;
@@ -541,34 +497,34 @@ Storage
 * @param activeCountry
 updateHighlightClick(activeCountry)
 {
-  this.clearHighlight();
-  //highlight bubbles
-  let bubbleRegion = d3.select('#scatter-plot').selectAll('.bubble')
-  .filter(b => b.region === activeCountry.region)
-  .classed('selected-region', true);
-  let hiddenBubbles = d3.select('#scatter-plot').selectAll('.bubble')
-  .filter(b => b.region !== activeCountry.region)
-  .classed('hidden', true);
-  let bubbleCountry = bubbleRegion.filter(b => b.id === activeCountry.id)
-  .classed('selected-country', true);
+this.clearHighlight();
+//highlight bubbles
+let bubbleRegion = d3.select('#scatter-plot').selectAll('.bubble')
+.filter(b => b.region === activeCountry.region)
+.classed('selected-region', true);
+let hiddenBubbles = d3.select('#scatter-plot').selectAll('.bubble')
+.filter(b => b.region !== activeCountry.region)
+.classed('hidden', true);
+let bubbleCountry = bubbleRegion.filter(b => b.id === activeCountry.id)
+.classed('selected-country', true);
 }
 
 * Clears any highlights
 
 clearHighlight()
 {
-  // Clear the map of any colors/markers; You can do this with inline styling or by
-  // defining a class style in styles.css
-  // Hint: If you followed our suggestion of using classes to style
-  // the colors and markers for hosts/teams/winners, you can use
-  // d3 selection and .classed to set these classes off here.
+// Clear the map of any colors/markers; You can do this with inline styling or by
+// defining a class style in styles.css
+// Hint: If you followed our suggestion of using classes to style
+// the colors and markers for hosts/teams/winners, you can use
+// d3 selection and .classed to set these classes off here.
 
-  d3.select('#chart-view').selectAll('.selected-country')
-  .classed('selected-country', false);
-  d3.select('#chart-view').selectAll('.selected-region')
-  .classed('selected-region', false);
-  d3.select('#chart-view').selectAll('.hidden')
-  .classed('hidden', false);
+d3.select('#chart-view').selectAll('.selected-country')
+.classed('selected-country', false);
+d3.select('#chart-view').selectAll('.selected-region')
+.classed('selected-region', false);
+d3.select('#chart-view').selectAll('.hidden')
+.classed('hidden', false);
 }
 
 // if (this.activeCountry) {
