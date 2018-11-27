@@ -182,6 +182,9 @@ class Map
             .on("mouseover", this.tip.show)
             .on("mouseout", this.tip.hide)
             .on("click", d => {
+                let temp = d3.selectAll('circle');
+                temp.classed('selected', false);
+              
                 //create lineChart object
                 let lineChart = new LineChart(d);
                 lineChart.drawLineChart();
