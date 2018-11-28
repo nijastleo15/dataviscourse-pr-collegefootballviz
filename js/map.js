@@ -32,9 +32,7 @@ class Map
                 return [0, 0];
             })
 
-        //j. added
         let selectedSchoolNodes = [];
-
     }
 
     /**
@@ -62,7 +60,6 @@ class Map
             .attr("d", path(topojson.mesh(theMap, theMap.objects.states, function (a, b) {
                 return a !== b;
             })));
-        // outer border?
 
         map.append("g").classed("cities", true);
     }
@@ -285,7 +282,6 @@ class Map
 
                 //j. edits
                 gapPlot.updatePlot(selectedSchoolNodes, that.activeYear, null, 'Revenues', 'Undergrads', 'Wins');
-
         });
     }
 }

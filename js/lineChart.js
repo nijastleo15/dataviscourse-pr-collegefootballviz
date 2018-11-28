@@ -1,17 +1,14 @@
-// TODO:
-
-// Code for line chart
-// Hidden on load
-// Shows on click of school on map
-// Includes dropdowns for y-axis variables.
-
+/** Code for line chart
+    Hidden on load
+    Shows on click of school on map or scatter plot
+    Includes dropdowns for y-axis variables.
+*/
 class LineChart
 {
     //http://bl.ocks.org/d3noob/e34791a32a54e015f57d
 
     constructor(schoolNode)
     {
-        //TODO:
         let margin = {top: 30, right: 40, bottom: 30, left: 40};
         this.width = 900 - margin.left - margin.right;
         this.height = 800 - margin.top - margin.bottom;
@@ -20,8 +17,8 @@ class LineChart
         this.selectedSchool = schoolNode['School'];
     }
 
-    async drawLineChart() {
-
+    async drawLineChart()
+    {
         d3.select("#line-chart").select("svg").remove();
 
         d3.select("#line-chart").select(".dropDownWrapper").remove();
@@ -36,7 +33,8 @@ class LineChart
         let allSchoolData = [];
 
         schoolCSV.forEach(d => {
-            if (d.School === this.selectedSchool){
+            if (d.School === this.selectedSchool)
+            {
                 allSchoolData.push(d);
             }
         });
@@ -44,7 +42,6 @@ class LineChart
         let yearArray = allSchoolData.map(d => {
             return +d['Year']
         });
-
 
         let yearMin = Math.min(...yearArray);
 
@@ -78,26 +75,21 @@ class LineChart
             .domain([0, expensesMax])
             .range([this.height, 100]);
 
-
-        //Create the axes
+        // Create the axes
         let xAxis = d3.axisBottom(xScale).ticks(yearArray.length).tickFormat(d3.format("d"));
 
         let yAxisLeft = d3.axisLeft(y1Scale).ticks(revenuesArray.length);
 
         let yAxisRight = d3.axisRight(y2Scale).ticks(expensesArray.length);
 
-
-
         let line1Data = [];
 
-        //create objects with "x" and "y" attributes to use in d3.line function, append objects to line1Data array
+        // Create objects with "x" and "y" attributes to use in d3.line function, append objects to line1Data array
         yearArray.forEach(d => {
             revenuesArray.forEach(e => {
-                if (yearArray.indexOf(d) === revenuesArray.indexOf(e)){
-                    line1Data.push(
-                        {"x": d,
-                            "y": e}
-                    )
+                if (yearArray.indexOf(d) === revenuesArray.indexOf(e))
+                {
+                    line1Data.push({"x": d, "y": e})
                 }
             })
         });
@@ -105,11 +97,9 @@ class LineChart
         let line2Data = [];
         yearArray.forEach(d => {
             expensesArray.forEach(e => {
-                if (yearArray.indexOf(d) === expensesArray.indexOf(e)){
-                    line2Data.push(
-                        {"x": d,
-                            "y": e}
-                    )
+                if (yearArray.indexOf(d) === expensesArray.indexOf(e))
+                {
+                    line2Data.push({"x": d, "y": e})
                 }
             })
         });
@@ -122,10 +112,7 @@ class LineChart
             .x(function(d){return xScale(d.x)})
             .y(function(d){return y2Scale(d.y)});
 
-
-
         d3.select("#line-chart").selectAll("g").remove();
-
 
         let lineSVG = d3.select("#line-chart").select("svg");
 
@@ -140,7 +127,7 @@ class LineChart
             .attr("transform", "translate(" + 75 + "," + 25 + ")")
             .classed("leftLine", true);
 
-        //append line for y2 axis
+        // Append line for y2 axis
         lineSVG.append("path")
             .attr("d", valueLine2(line2Data))
             .attr("stroke", "red")
@@ -149,19 +136,16 @@ class LineChart
             .attr("transform", "translate(" + 75 + "," + 25 + ")")
             .classed("rightLine", true);
 
-
         lineSVG.append("g").call(xAxis)
             .attr("transform", "translate(" + 75 + "," + 765 + ")");
 
-
-        //need to append text element to give axis title
+        // Need to append text element to give axis title
         lineSVG.append("text")
             .style("text-anchor", "middle")
             .attr("transform", "translate(" + 445 + "," + 800 + ")")
             .text("Year");
 
-
-        //classed y-axisLeft so I can select the axis later and delete it
+        // Classed y-axisLeft so I can select the axis later and delete it
         lineSVG.append("g").call(yAxisLeft).classed("y-axisLeft", true)
             .attr("transform", "translate(" + 75 + "," + 25 + ")");
 
@@ -181,7 +165,6 @@ class LineChart
             .attr("x", 370)
             .classed("rightAxisLabel", true)
             .text("Expenses");
-
 
         lineSVG.append("text")
             .attr("x", 100)
@@ -207,6 +190,7 @@ class LineChart
             .attr("value", d => d);
 
         let that = this;
+
         yLeftDropDown
             .on("change", function() {
 
@@ -215,40 +199,42 @@ class LineChart
                 d3.selectAll(".leftAxisLabel").remove();
 
                 //select the new data and create an array
-
                 let selectedDataset = d3.event.target.value;
 
                 let newData;
-                if (selectedDataset === "Revenues") {
+                if (selectedDataset === "Revenues")
+                {
                     newData = allSchoolData.map(d => {
                         return +d['Revenues']
                     })
                 }
-                else if (selectedDataset === "Expenses") {
+                else if (selectedDataset === "Expenses")
+                {
                     newData = allSchoolData.map(d => {
                         return +d['Expenses'];
                     })
                 }
-                else if (selectedDataset === "Undergraduates") {
+                else if (selectedDataset === "Undergraduates")
+                {
                     newData = allSchoolData.map(d => {
                         return +d['Undergrads'];
                     })
                 }
-                else if (selectedDataset === "Coach's Salary") {
+                else if (selectedDataset === "Coach's Salary")
+                {
                     newData = allSchoolData.map(d => {
                         return +d['Coach_Salary'];
                     })
                 }
-                else if (selectedDataset === "Wins") {
+                else if (selectedDataset === "Wins")
+                {
                     newData = allSchoolData.map(d => {
                         return +d['Wins'];
                     })
                 }
 
-                //now that I have the data, I need to update the left axis
-
+                // Now that I have the data, I need to update the left axis
                 let newDataMax = Math.max(...newData);
-
 
                 let newDataScale = d3.scaleLinear()
                     .domain([0, newDataMax])
@@ -259,14 +245,13 @@ class LineChart
                 lineSVG.append("g").call(yAxisLeft).classed("y-axisLeft", true)
                     .attr("transform", "translate(" + 75 + "," + 25 + ")");
 
-
-                //now I need to update the line graph
-
+                // Now I need to update the line graph
                 let newLineData = [];
 
                 let i = 0;
 
-                while (i<yearArray.length) {
+                while (i<yearArray.length)
+                {
                     let dataPoint = {
                         "x": yearArray[i],
                         "y": newData[i]
@@ -285,7 +270,7 @@ class LineChart
 
                 d3.select(".leftLine").remove();
 
-                //append line for y1 axis. Make sure the translation is the same as yAxisLeft
+                // Append line for y1 axis. Make sure the translation is the same as yAxisLeft
                 lineSVG.append("path")
                     .attr("d", newLeftAxis(newLineData))
                     .attr("stroke", "steelblue")
@@ -294,15 +279,13 @@ class LineChart
                     .attr("transform", "translate(" + 75 + "," + 25 + ")")
                     .classed("leftLine", true);
 
-
                 lineSVG.append("text")
                     .attr("transform", "rotate(-90)")
                     .attr("y", 12)
                     .attr("x", -430)
                     .classed("leftAxisLabel", true)
                     .text(selectedDataset);
-
-            });
+        });
 
         let yRightWrap = dropdownWrap.append('div').classed("yRightWrap", true);
 
@@ -330,40 +313,42 @@ class LineChart
                 d3.selectAll(".rightAxisLabel").remove();
 
                 //select the new data and create an array
-
                 let selectedDataset = d3.event.target.value;
 
                 let newData;
-                if (selectedDataset === "Revenues") {
+                if (selectedDataset === "Revenues")
+                {
                     newData = allSchoolData.map(d => {
                         return +d['Revenues']
                     })
                 }
-                else if (selectedDataset === "Expenses") {
+                else if (selectedDataset === "Expenses")
+                {
                     newData = allSchoolData.map(d => {
                         return +d['Expenses'];
                     })
                 }
-                else if (selectedDataset === "Undergraduates") {
+                else if (selectedDataset === "Undergraduates")
+                {
                     newData = allSchoolData.map(d => {
                         return +d['Undergrads'];
                     })
                 }
-                else if (selectedDataset === "Coach's Salary") {
+                else if (selectedDataset === "Coach's Salary")
+                {
                     newData = allSchoolData.map(d => {
                         return +d['Coach_Salary'];
                     })
                 }
-                else if (selectedDataset === "Wins") {
+                else if (selectedDataset === "Wins")
+                {
                     newData = allSchoolData.map(d => {
                         return +d['Wins'];
                     })
                 }
 
-                //now that I have the data, I need to update the right axis
-
+                // Now that I have the data, I need to update the right axis
                 let newDataMax = Math.max(...newData);
-
 
                 let newDataScale = d3.scaleLinear()
                     .domain([0, newDataMax])
@@ -374,14 +359,13 @@ class LineChart
                 lineSVG.append("g").call(yAxisRight).classed("y-axisRight", true)
                     .attr("transform", "translate(" + 820 + "," + 25 + ")");
 
-
-                //now I need to update the line graph
-
+                // Now I need to update the line graph
                 let newLineData = [];
 
                 let i = 0;
 
-                while (i<yearArray.length) {
+                while (i<yearArray.length)
+                {
                     let dataPoint = {
                         "x": yearArray[i],
                         "y": newData[i]
@@ -394,10 +378,9 @@ class LineChart
                     .x(function(d){return xScale(d.x)})
                     .y(function(d){return newDataScale(d.y)});
 
-
                 d3.select(".rightLine").remove();
 
-                //append line for y1 axis. Make sure the translation is the same as yAxisLeft
+                // Append line for y1 axis. Make sure the translation is the same as yAxisLeft
                 lineSVG.append("path")
                     .attr("d", newRightAxis(newLineData))
                     .attr("stroke", "red")
@@ -406,18 +389,14 @@ class LineChart
                     .attr("transform", "translate(" + 75 + "," + 25 + ")")
                     .classed("rightLine", true);
 
-
                 lineSVG.append("text")
                     .attr("transform", "rotate(-270)")
                     .attr("y", -887)
                     .attr("x", 385)
                     .classed("rightAxisLabel", true)
                     .text(selectedDataset);
-
-            });
-
+        });
+    
     }
-
-    // functions...
 
 }

@@ -1,20 +1,15 @@
 class YearSlider
 {
-    //constructor(year)
     constructor(year, map, scatterplot)
     {
         this.activeYear = year;
         this.drawYearBar();
-        //Added in
         this.map = map;
-        // console.log(this.map);
         this.scatterplot = scatterplot;
-
     }
 
     drawYearBar()
     {
-        //added
         let that = this;
 
         let yearScale = d3.scaleLinear().domain([2003, 2016]).range([40, 500]);

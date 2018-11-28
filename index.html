@@ -1,43 +1,110 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
 
-<head>
-    <meta charset="UTF-8">
-    <title>CS 6630 Visualization - Project</title>
+	<head>
 
-    <link rel="stylesheet" href="styles.css" />
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+		<title>Impact of Money in College Football</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="stylesheet" href="styles.css" />
 
-    <script src="https://d3js.org/d3.v5.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.7.1/d3-tip.min.js"></script>
+		<script src="https://d3js.org/d3.v5.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.7.1/d3-tip.min.js"></script>
+	
+		<script src="js/script.js" async></script>
+		<script src="js/yearSlider.js" async></script>
+		<script src="js/map.js" async></script>
+		<script src="js/scatterPlot.js" async></script>
+		<script src="js/lineChart.js" async></script>
 
-    <script src="js/script.js" async></script>
-    <script src="js/yearSlider.js" async></script>
-    <script src="js/map.js" async></script>
-    <script src="js/scatterPlot.js" async></script>
-    <script src="js/lineChart.js" async></script>
+		<h3>Team: Nick Stephenson, Andrew Potts, Jeff Kelso</h3>
 
-</head>
+	</head>
 
-<body>
-    <div class="header">
-        <h1>Impact of Money in College Football</h1>
-        <p class="info">Team: Nick Stephenson, Andrew Potts, Jeff Kelso</p>
-    </div>
-    <div id="year-slider"></div>
-    <div id ="map-dropdown"></div>
-    <div id="map-chart" class="view"></div>
-    <div id="scatter-plot" class="view"></div>
+	<body class="is-preload">
 
-    <div id="line-chart">
-        <!--<svg width = "900" height = "800">-->
+		<!-- Wrapper -->
+		<div id="wrapper">
 
-        <!--</svg>-->
-    </div>
-    <!-- TODO: Add more divs, rearrange things -->
+			<!-- Main -->
+			<div id="main">
 
-</body>
+				<div class="inner">
+
+					<!-- Header -->
+					<header id="header">
+						<!-- <a href="index.html" class="projectTitle"><strong>Impact of Money in College Football</strong></a> -->
+						<strong class="projectTitle">Impact of Money in College Football</strong>
+					</header>
+
+					<!-- Map and Scatter Plot -->
+					<section>
+
+						<div id = map class = "map-wrapper">
+							<div id = "year-slider"></div>
+    						<div id = "map-dropdown"></div>
+							<div id = "map-chart"></div>
+						</div>
+						
+						<div id = "scatter-plot" class = "scatterview"></div>
+						
+					</section>
+
+					<!-- Line Chart -->
+					<section>
+
+						<div id="line-chart">
+					
+					</section>
+
+				</div>
+
+			</div>
+
+			<!-- Sidebar -->
+			<div id="sidebar">
+
+				<div class="inner">
+
+				<!-- Menu -->
+				<nav id="menu">
+					<header class="major">
+						<h2>CS 6630 Visualization</h2>
+						<h2>Final Project</h2>
+					</header>
+					<ul>
+						<li><a href="https://github.com/nijastleo15/dataviscourse-pr-collegefootballviz">GitHub Repository</a></li>
+						<li><a href="Process_Book.pdf">Process Book</a></li>
+						<li><a href="https://www.youtube.com/watch?v=WoFaCFzONtw">YouTube Demo</a></li>
+					</ul>
+				</nav>
+
+				<!-- Footer -->
+				<footer id="footer">
+					<p class="copyright">&copy; Design: <a href="https://html5up.net">HTML5 UP</a> (Editorial)</p>
+					<p class="copyright">All rights reserved.</p>
+				</footer>
+
+				</div>
+
+			</div>
+
+		</div>
+
+		<!-- Scripts for Editorial layout -->
+				<script src="assets/js/jquery.min.js"></script>
+				<script src="assets/js/browser.min.js"></script>
+				<script src="assets/js/breakpoints.min.js"></script>
+				<script src="assets/js/util.js"></script>
+				<script src="assets/js/main.js"></script>
+
+	</body>
 
 </html>
