@@ -1,7 +1,7 @@
 .scatterview
 {
     float: right;
-    width: 50%;
+    width: 48%;
 }
 
 .axis path,
@@ -16,7 +16,7 @@
 .map-wrapper
 {
     float: left;
-    width: 50%
+    width: 52%
 }
 
 #map-chart
